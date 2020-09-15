@@ -1,0 +1,22 @@
+{
+  "name": "tinymce-jquery",
+  "version": "1.0.0",
+  "description": "Official TinyMCE integration for JQuery",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json && rollup -c rollup.config.js"
+  },
+  "repository": "https://github.com/tinymce/tinymce-jquery",
+  "author": "Tiny Technologies",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "@ephox/swag": "^4.3.1",
+    "@types/jquery": "^3.5.1",
+    "@types/tinymce": "^4.5.24",
+    "rollup": "^2.26.11",
+    "ts-loader": "^8.0.3",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
+  }
+}
