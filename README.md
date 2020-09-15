@@ -1,0 +1,1 @@
+# Official TinyMCE JQuery integration
