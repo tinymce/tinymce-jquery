@@ -62,8 +62,8 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
   // now be able to set/get the contents of editor instances for
   // example $('#editorid').html('Content'); will update the TinyMCE iframe instance
   jq.each(["text", "html", "val"], function (i, name: "text" | "html" | "val") {
-    const origFn: Function = jQueryFn[name] = jq.fn[name],
-      textProc = (name === "text");
+    const origFn: Function = jQueryFn[name] = jq.fn[name];
+    const textProc = (name === "text");
     jq.fn[name] = function (value?: any): any {
       const self = this;
 
@@ -85,7 +85,7 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
         const ed = getTinymceInstance(node);
 
         if (ed) {
-          ret += textProc ? ed.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : ed.getContent({ save: true });
+          ret += textProc ? ed.getContent({ format: 'text' }) : ed.getContent({ save: true });
         } else {
           ret += origFn.apply(jq(node), args);
         }
