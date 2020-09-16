@@ -3,6 +3,13 @@ import { getJquery } from './JQuery';
 import { patchJQueryFunctions } from './Patch';
 import { getTinymce, loadTinymce, getTinymceInstance } from './TinyMCE';
 
+declare global {
+  interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+    tinymce(): Editor;
+    tinymce(settings: Record<string, any>): this;
+  }
+}
+
 const getScriptSrc = (settings: Record<string, any>): string => {
   if (typeof settings.script_url === 'string') {
     return settings.script_url;
@@ -30,7 +37,7 @@ const fireOnInit = (self: JQuery<HTMLElement>, onInit: Function | string) => {
 
 let patchApplied = false;
 
-export const editor = function(this: JQuery<HTMLElement>, settings?: Record<string, any>) {
+const tinymce = function(this: JQuery<HTMLElement>, settings?: Record<string, any>) {
   const self = this;
   // No match then just ignore the call
   if (!self.length) {
@@ -78,6 +85,10 @@ export const editor = function(this: JQuery<HTMLElement>, settings?: Record<stri
       const init_instance_callback = (editor: Editor) => {
         self.css('visibility', '');
         initCount++;
+        const init: Function = settings.init_instance_callback;
+        if (typeof init === 'function') {
+          init.call(this, editor);
+        }
         if (onInit && initCount === self.length) {
           fireOnInit(self, onInit);
         }
@@ -99,4 +110,13 @@ export const editor = function(this: JQuery<HTMLElement>, settings?: Record<stri
 
   }); // load tinymce
   return self;
+};
+
+export default function() {
+  const jq = getJquery();
+  // Add :tinymce pseudo selector this will select elements that has been converted into editor instances
+  // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
+  jq.expr.pseudos.tinymce = (e: Element) => !!getTinymceInstance(e);
+  // Add a tinymce function for creating editors
+  (jq.fn as any).tinymce = tinymce;
 };
