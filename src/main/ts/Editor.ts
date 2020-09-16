@@ -24,33 +24,32 @@ const fireOnInit = (self: JQuery<HTMLElement>, onInit: Function | string) => {
   // Fire the onInit event when all editors are initialized
   let func = onInit;
   let scope = null;
-  if (typeof func === "string") {
-    scope = (func.indexOf(".") === -1) ? null : getTinymce().resolve(func.replace(/\.\w+$/, ""));
+  if (typeof func === 'string') {
+    scope = (func.indexOf('.') === -1) ? null : getTinymce().resolve(func.replace(/\.\w+$/, ''));
     func = getTinymce().resolve(func) as Function;
   }
   // gather the list of editors
-  const editors = self.map((i, elem) => getTinymce().get(elem.id))
+  const editors = self.map((i, elem) => getTinymce().get(elem.id));
 
   // Call the onInit function with the object
   func.apply(scope || getTinymce(), editors);
-}
+};
 
 let patchApplied = false;
 
-const tinymce = function(this: JQuery<HTMLElement>, settings?: Record<string, any>) {
-  const self = this;
+const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string, any>) {
   // No match then just ignore the call
-  if (!self.length) {
-    return self;
+  if (!this.length) {
+    return this;
   }
 
   // Get editor instance
   if (!settings) {
-    return getTinymceInstance(self[0]);
+    return getTinymceInstance(this[0]);
   }
 
   // Hide textarea to avoid flicker
-  self.css('visibility', 'hidden'); 
+  this.css('visibility', 'hidden');
 
   // Load tinymce
   loadTinymce(getScriptSrc(settings), (tinymce, loadedScript) => {
@@ -67,56 +66,56 @@ const tinymce = function(this: JQuery<HTMLElement>, settings?: Record<string, an
     const onInit = settings.oninit;
     let initCount = 0;
     // Create an editor instance for each matched node
-    self.each(function (i, node) {
+    this.each((i, node) => {
 
       let id = node.id;
 
       // Generate unique id for target element if needed
       if (!id) {
-        node.id = id = getTinymce().DOM.uniqueId();
+        node.id = id = tinymce.DOM.uniqueId();
       }
 
       // Only init the editor once
-      if (getTinymce().get(id)) {
+      if (tinymce.get(id)) {
         initCount++;
         return;
       }
 
-      const init_instance_callback = (editor: Editor) => {
-        self.css('visibility', '');
+      const initCallback = (editor: Editor) => {
+        this.css('visibility', '');
         initCount++;
         const init: Function = settings.init_instance_callback;
         if (typeof init === 'function') {
-          init.call(this, editor);
+          init.call(editor, editor);
         }
-        if (onInit && initCount === self.length) {
-          fireOnInit(self, onInit);
+        if (onInit && initCount === this.length) {
+          fireOnInit(this, onInit);
         }
       };
 
       // Create editor instance and render it
       getTinymce().init({
         ...settings,
-        selector: undefined,
-        target: node,
-        init_instance_callback
+        'selector': undefined,
+        'target': node,
+        'init_instance_callback': initCallback
       });
 
-    }); // self.each 
+    }); // this.each
 
-    if (onInit && initCount === self.length) {
-      fireOnInit(self, onInit);
+    if (onInit && initCount === this.length) {
+      fireOnInit(this, onInit);
     }
 
   }); // load tinymce
-  return self;
+  return this;
 };
 
-export default function() {
+export default function () {
   const jq = getJquery();
   // Add :tinymce pseudo selector this will select elements that has been converted into editor instances
   // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
   jq.expr.pseudos.tinymce = (e: Element) => !!getTinymceInstance(e);
   // Add a tinymce function for creating editors
-  (jq.fn as any).tinymce = tinymce;
+  (jq.fn as any).tinymce = tinymceFn;
 };

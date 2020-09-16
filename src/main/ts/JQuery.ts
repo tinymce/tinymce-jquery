@@ -1,11 +1,11 @@
-import { Global } from "./Global";
+import { Global } from './Global';
 
-export const jquery = (): (typeof import("jquery")) | null => (Global && Global.jQuery) ?? null;
+const jquery = (): (typeof import('jquery')) | null => (Global && Global.jQuery) ?? null;
 
 export const getJquery = () => {
   const jq = jquery();
   if (jq != null) {
     return jq;
   }
-  throw new Error("Expected global jQuery");
+  throw new Error('Expected global jQuery');
 };

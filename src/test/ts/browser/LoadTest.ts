@@ -1,15 +1,16 @@
 import { Pipeline, Step, Waiter, Assertions } from '@ephox/agar';
-import { Element, Attr, Body, Insert, Remove, SelectorFilter, Class, Head } from '@ephox/sugar';
+import { Element, Body, Insert, Remove, SelectorFilter, Class } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
-import Editor from '../../../main/ts/Editor'
+import JqInt from '../../../main/ts/Editor';
 import { Arr, Cell } from '@ephox/katamari';
+import { Editor } from 'tinymce';
 
 UnitTest.asynctest('LoadTest', (success, failure) => {
   // Note that bedrock uses JQuery so we don't need to load it
-  Editor();
-  let seenSetup = Cell(false);
-  let seenInit = Cell(false);
-  let editorInstance: any;
+  JqInt();
+  const seenSetup = Cell(false);
+  const seenInit = Cell(false);
+  let editorInstance: Editor;
   Pipeline.async('', [
     Step.sync(() => {
       // make an element for JQuery to target
@@ -20,14 +21,14 @@ UnitTest.asynctest('LoadTest', (success, failure) => {
     Step.sync(() => {
       // select the element we just created and use the JQuery extension to make tinymce
       $('div.test-editor').tinymce({
-        setup: (editor) => {
+        'setup': (_editor: Editor) => {
           seenSetup.set(true);
         },
-        init_instance_callback: (editor) => {
+        'init_instance_callback': (editor: Editor) => {
           editorInstance = editor;
           seenInit.set(true);
         }
-      })
+      });
     }),
     Waiter.sTryUntilPredicate('Waiting for editor setup', () => seenSetup.get()),
     Waiter.sTryUntilPredicate('Waiting for editor init', () => seenInit.get()),
