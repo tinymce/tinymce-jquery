@@ -52,9 +52,9 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string,
   this.css('visibility', 'hidden');
 
   // Load tinymce
-  loadTinymce(getScriptSrc(settings), (tinymce, loadedScript) => {
+  loadTinymce(getScriptSrc(settings), (tinymce, loadedFromProvidedUrl) => {
     // Execute callback after tinymce has been loaded and before the initialization occurs
-    if (loadedScript && settings.script_loaded) {
+    if (loadedFromProvidedUrl && settings.script_loaded) {
       settings.script_loaded();
     }
     // Apply patches to the jQuery object, only once

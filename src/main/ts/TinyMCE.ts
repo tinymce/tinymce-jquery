@@ -25,21 +25,27 @@ export const getTinymceInstance = function (element: Element) {
   return ed;
 };
 
-type TinymceCallback = (tinymce: TinymceGlobal, loadedScript: boolean) => void;
+enum LoadStatus {
+  NOT_LOADING = 0,
+  LOADING_STARTED = 1,
+  LOADING_FINISHED = 2
+}
 
-let lazyLoading = 0;
+type TinymceCallback = (tinymce: TinymceGlobal, loadedFromProvidedUrl: boolean) => void;
+
+let lazyLoading = LoadStatus.NOT_LOADING;
 const callbacks: TinymceCallback[] = [];
 
 export const loadTinymce = (url: string, callback: TinymceCallback) => {
   // Load TinyMCE on demand, if we need to
-  if (!tinymce() && !lazyLoading) {
-    lazyLoading = 1;
+  if (!hasTinymce() && lazyLoading === LoadStatus.NOT_LOADING) {
+    lazyLoading = LoadStatus.LOADING_STARTED;
 
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.onload = function (e: Event) {
-      if (lazyLoading !== 2 && e.type === 'load') {
-        lazyLoading = 2;
+      if (lazyLoading !== LoadStatus.LOADING_FINISHED && e.type === 'load') {
+        lazyLoading = LoadStatus.LOADING_FINISHED;
         const tiny = getTinymce();
         callback(tiny, true);
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
@@ -52,7 +58,7 @@ export const loadTinymce = (url: string, callback: TinymceCallback) => {
     document.body.appendChild(script);
   } else {
     // Delay the init call until tinymce is loaded
-    if (lazyLoading === 1) {
+    if (lazyLoading === LoadStatus.LOADING_STARTED) {
       callbacks.push(callback);
     } else {
       callback(getTinymce(), false);
