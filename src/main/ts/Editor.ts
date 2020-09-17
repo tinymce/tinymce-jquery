@@ -1,7 +1,7 @@
 import { Editor } from 'tinymce';
 import { getJquery } from './JQuery';
 import { patchJQueryFunctions } from './Patch';
-import { getTinymce, loadTinymce, getTinymceInstance } from './TinyMCE';
+import { loadTinymce, getTinymceInstance } from './TinyMCE';
 
 declare global {
   interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
@@ -9,6 +9,9 @@ declare global {
     tinymce(settings: Record<string, any>): this;
   }
 }
+
+type TinymceGlobal = typeof import('tinymce');
+type AllInitFn = (editors: Editor[]) => void;
 
 const getScriptSrc = (settings: Record<string, any>): string => {
   if (typeof settings.script_url === 'string') {
@@ -20,19 +23,25 @@ const getScriptSrc = (settings: Record<string, any>): string => {
   }
 };
 
-const fireOnInit = (self: JQuery<HTMLElement>, onInit: Function | string) => {
-  // Fire the onInit event when all editors are initialized
-  let func = onInit;
-  let scope = null;
-  if (typeof func === 'string') {
-    scope = (func.indexOf('.') === -1) ? null : getTinymce().resolve(func.replace(/\.\w+$/, ''));
-    func = getTinymce().resolve(func) as Function;
-  }
-  // gather the list of editors
-  const editors = self.map((i, elem) => getTinymce().get(elem.id));
+const getEditors = (tinymce: TinymceGlobal, self: JQuery<HTMLElement>): Editor[] => {
+  const out: Editor[] = [];
+  self.each((i, ele) => {
+    out.push(tinymce.get(ele.id));
+  });
+  return out;
+};
 
-  // Call the onInit function with the object
-  func.apply(scope || getTinymce(), editors);
+const resolveFunction = <F extends Function> (tiny: TinymceGlobal, fnOrStr: F | string): F | null => {
+  if (typeof fnOrStr === 'string') {
+    const func: unknown = tiny.resolve(fnOrStr);
+    if (typeof func === 'function') {
+      const scope = (fnOrStr.indexOf('.') === -1) ? tiny : tiny.resolve(fnOrStr.replace(/\.\w+$/, ''));
+      return (func as F).bind(scope);
+    }
+  } else if (typeof fnOrStr === 'function') {
+    return fnOrStr.bind(tiny);
+  }
+  return null;
 };
 
 let patchApplied = false;
@@ -63,48 +72,48 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string,
       patchJQueryFunctions(getJquery());
     }
 
-    const onInit = settings.oninit;
+    // track how many editors have initialized so we can run a callback
     let initCount = 0;
-    // Create an editor instance for each matched node
-    this.each((i, node) => {
+    const allInitCallback = resolveFunction<AllInitFn>(tinymce, settings.oninit);
 
-      let id = node.id;
+    // Create an editor instance for each matched node
+    this.each((_i, elm) => {
 
       // Generate unique id for target element if needed
-      if (!id) {
-        node.id = id = tinymce.DOM.uniqueId();
+      if (!elm.id) {
+        elm.id = tinymce.DOM.uniqueId();
       }
 
       // Only init the editor once
-      if (tinymce.get(id)) {
+      if (tinymce.get(elm.id)) {
         initCount++;
         return;
       }
 
-      const initCallback = (editor: Editor) => {
+      const initInstanceCallback = (editor: Editor) => {
         this.css('visibility', '');
         initCount++;
-        const init: Function = settings.init_instance_callback;
-        if (typeof init === 'function') {
-          init.call(editor, editor);
+        const origFn: Function = settings.init_instance_callback;
+        if (typeof origFn === 'function') {
+          origFn.call(editor, editor);
         }
-        if (onInit && initCount === this.length) {
-          fireOnInit(this, onInit);
+        if (allInitCallback && initCount === this.length) {
+          allInitCallback(getEditors(tinymce, this));
         }
       };
 
       // Create editor instance and render it
-      getTinymce().init({
+      tinymce.init({
         ...settings,
         'selector': undefined,
-        'target': node,
-        'init_instance_callback': initCallback
+        'target': elm,
+        'init_instance_callback': initInstanceCallback
       });
 
     }); // this.each
 
-    if (onInit && initCount === this.length) {
-      fireOnInit(this, onInit);
+    if (allInitCallback && initCount === this.length) {
+      allInitCallback(getEditors(tinymce, this));
     }
 
   }); // load tinymce
