@@ -83,7 +83,7 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
         const ed = getTinymceInstance(node);
 
         if (ed) {
-          ret += textProc ? ed.getContent({ 'format': 'text' }) : ed.getContent({ 'save': true });
+          ret += ed.getContent(textProc ? { 'format': 'text' } : { 'save': true });
         } else {
           ret += origFn.apply(jq(node), args);
         }
