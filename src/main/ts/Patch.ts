@@ -35,79 +35,75 @@ const loadOrSave = function (this: JQuery<HTMLElement>, value?: string): string 
 };
 
 // Checks if the specified set contains tinymce instances
-const containsTinyMCE = function (matchedSet: JQuery<HTMLElement>) {
-  return !!((matchedSet) && (matchedSet.length) && hasTinymce() && (matchedSet.is(':tinymce')));
-};
+const containsTinyMCE = (matchedSet: JQuery<HTMLElement>) =>
+  !!((matchedSet) && (matchedSet.length) && hasTinymce() && (matchedSet.is(':tinymce')));
 
 // This function patches internal jQuery functions so that if
 // you for example remove an div element containing an editor it's
 // automatically destroyed by the TinyMCE API
 export const patchJQueryFunctions = (jq: JQueryStatic) => {
   // Patch various jQuery functions
-  const jQueryFn: Record<string, Function> = {};
 
   // Patch some setter/getter functions these will
   // now be able to set/get the contents of editor instances for
   // example $('#editorid').html('Content'); will update the TinyMCE iframe instance
-  jq.each([ 'text', 'html', 'val' ], function (_i, name: 'text' | 'html' | 'val') {
-    const origFn: Function = jQueryFn[name] = jq.fn[name];
+  jq.each([ 'text', 'html', 'val' ], (_i, name: 'text' | 'html' | 'val') => {
+    const origFn: Function = jq.fn[name];
     const textProc = (name === 'text');
     jq.fn[name] = function (...args: any[]): any {
-      const value = args[0];
 
       if (!containsTinyMCE(this)) {
         return origFn.apply(this, args);
       }
 
+      const value = args[0];
       if (value !== undefined) {
+        // set value
         loadOrSave.call(this.filter(':tinymce'), value);
         origFn.apply(this.not(':tinymce'), args);
-
         return this; // return original set for chaining
+      } else {
+        // get value
+        let ret = '';
+        (textProc ? this : this.eq(0)).each((_i2, elm) => {
+          ret += withTinymceInstance(elm,
+            (ed) => ed.getContent(textProc ? { 'format': 'text' } : { 'save': true }),
+            (elem) => origFn.apply(jq(elem), args)
+          );
+        });
+        return ret;
       }
-
-      let ret = '';
-
-      (textProc ? this : this.eq(0)).each((_i2, elm) => {
-        ret += withTinymceInstance(elm,
-          (ed) => ed.getContent(textProc ? { 'format': 'text' } : { 'save': true }),
-          (elem) => origFn.apply(jq(elem), args)
-        );
-      });
-
-      return ret;
     };
   });
 
   // Makes it possible to use $('#id').append("content"); to append contents to the TinyMCE editor iframe
-  jq.each([ 'append', 'prepend' ], function (_i, name: 'append' | 'prepend') {
-    const origFn = jQueryFn[name] = jq.fn[name];
+  jq.each([ 'append', 'prepend' ], (_i, name: 'append' | 'prepend') => {
+    const origFn = jq.fn[name];
     const prepend = (name === 'prepend');
 
     jq.fn[name] = function (...args: any[]): any {
-      const value = args[0];
 
       if (!containsTinyMCE(this)) {
         return origFn.apply(this, args as any);
       }
 
+      const value = args[0];
       if (value !== undefined) {
         if (typeof value === 'string') {
           this.filter(':tinymce').each((_i2, elm) => {
             withTinymceInstance(elm, (ed) => ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value));
           });
         }
-
         origFn.apply(this.not(':tinymce'), args as any);
-
-        return this; // return original set for chaining
       }
+
+      return this; // return original set for chaining
     };
   });
 
   // Makes sure that the editor instance gets properly destroyed when the parent element is removed
-  jq.each([ 'remove', 'replaceWith', 'replaceAll', 'empty' ], function (i, name: 'remove' | 'replaceWith' | 'replaceAll' | 'empty') {
-    const origFn: Function = jQueryFn[name] = jq.fn[name];
+  jq.each([ 'remove', 'replaceWith', 'replaceAll', 'empty' ], (_i, name: 'remove' | 'replaceWith' | 'replaceAll' | 'empty') => {
+    const origFn: Function = jq.fn[name];
 
     jq.fn[name] = function (...args: any[]): any {
       removeEditors.call(this, name);
@@ -119,29 +115,26 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
 
   // Makes sure that $('#tinymce_id').attr('value') gets the editors current HTML contents
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  jQueryFn.attr = jq.fn.attr;
+  const origAttrFn = jq.fn.attr;
   jq.fn.attr = function (...args: any[]): any {
     const name = args[0];
-    const value = args[1];
 
-    if ((!name) || (name !== 'value') || (!containsTinyMCE(this))) {
-      if (value !== undefined) {
-        return jQueryFn.attr.apply(this, args);
-      }
-
-      return jQueryFn.attr.apply(this, args);
+    if (name !== 'value' || !containsTinyMCE(this)) {
+      return origAttrFn.apply(this, args as any);
     }
 
+    const value = args[1];
     if (value !== undefined) {
       loadOrSave.call(this.filter(':tinymce'), value);
-      jQueryFn.attr.apply(this.not(':tinymce'), args);
+      origAttrFn.apply(this.not(':tinymce'), args as any);
 
       return this; // return original set for chaining
+    } else {
+      return withTinymceInstance(this[0],
+        (ed) => ed.getContent({ 'save': true }),
+        (elm) => origAttrFn.apply(jq(elm), args as any)
+      );
     }
 
-    return withTinymceInstance(this[0],
-      (ed) => ed.getContent({ 'save': true }),
-      (elm) => jQueryFn.attr.apply(jq(elm), args)
-    );
   };
 };
