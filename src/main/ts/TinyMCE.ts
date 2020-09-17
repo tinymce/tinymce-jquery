@@ -1,3 +1,4 @@
+import { Editor } from 'tinymce';
 import { Global } from './Global';
 
 type TinymceGlobal = typeof import('tinymce');
@@ -23,6 +24,18 @@ export const getTinymceInstance = function (element: Element) {
   }
 
   return ed;
+};
+
+export const withTinymceInstance: {
+  <T> (node: HTMLElement, ifPresent: (ed: Editor) => T): (T | void);
+  <T> (node: HTMLElement, ifPresent: (ed: Editor) => T, ifMissing: (elem: HTMLElement) => T): T;
+} = (node: HTMLElement, ifPresent: (ed: Editor) => any, ifMissing?: (elem: HTMLElement) => any): any => {
+  const ed = getTinymceInstance(node);
+  if (ed) {
+    return ifPresent(ed);
+  } else if (ifMissing) {
+    return ifMissing(node);
+  }
 };
 
 enum LoadStatus {

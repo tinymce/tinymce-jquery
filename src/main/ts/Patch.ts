@@ -1,16 +1,11 @@
-import { getTinymce, hasTinymce, getTinymceInstance } from './TinyMCE';
-
+import { getTinymce, hasTinymce, withTinymceInstance } from './TinyMCE';
 
 // Removes any child editor instances by looking for editor wrapper elements
 const removeEditors = function (this: JQuery<HTMLElement>, name?: string) {
   // If the function is remove
   if (name === 'remove') {
-    this.each(function (i, node) {
-      const ed = getTinymceInstance(node);
-
-      if (ed) {
-        ed.remove();
-      }
+    this.each((_i, elm) => {
+      withTinymceInstance(elm, (ed) => ed.remove());
     });
   }
 
@@ -30,18 +25,12 @@ const loadOrSave = function (this: JQuery<HTMLElement>, value?: string): string 
   if (value !== null && value !== undefined) {
     removeEditors.call(this);
     // Saves the contents before get/set value of textarea/div
-    this.each(function (i, node) {
-      const ed = getTinymce().get(node.id);
-      if (ed) {
-        ed.setContent(value);
-      }
+    this.each((_i, elm) => {
+      withTinymceInstance(elm, (ed) => ed.setContent(value));
     });
   } else if (this.length > 0) {
     // Handle get value
-    const ed = getTinymce().get(this[0].id);
-    if (ed) {
-      return ed.getContent();
-    }
+    return withTinymceInstance(this[0], (ed) => ed.getContent());
   }
 };
 
@@ -79,14 +68,11 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
 
       let ret = '';
 
-      (textProc ? this : this.eq(0)).each(function (_i2, node) {
-        const ed = getTinymceInstance(node);
-
-        if (ed) {
-          ret += ed.getContent(textProc ? { 'format': 'text' } : { 'save': true });
-        } else {
-          ret += origFn.apply(jq(node), args);
-        }
+      (textProc ? this : this.eq(0)).each((_i2, elm) => {
+        ret += withTinymceInstance(elm,
+          (ed) => ed.getContent(textProc ? { 'format': 'text' } : { 'save': true }),
+          (elem) => origFn.apply(jq(elem), args)
+        );
       });
 
       return ret;
@@ -107,12 +93,8 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
 
       if (value !== undefined) {
         if (typeof value === 'string') {
-          this.filter(':tinymce').each(function (_i2, node) {
-            const ed = getTinymceInstance(node);
-
-            if (ed) {
-              ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value);
-            }
+          this.filter(':tinymce').each((_i2, elm) => {
+            withTinymceInstance(elm, (ed) => ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value));
           });
         }
 
@@ -157,9 +139,9 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
       return this; // return original set for chaining
     }
 
-    const node = this[0];
-    const ed = getTinymceInstance(node);
-
-    return ed ? ed.getContent({ 'save': true }) : jQueryFn.attr.apply(jq(node), args);
+    return withTinymceInstance(this[0],
+      (ed) => ed.getContent({ 'save': true }),
+      (elm) => jQueryFn.attr.apply(jq(elm), args)
+    );
   };
 };
