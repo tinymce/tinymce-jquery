@@ -128,6 +128,18 @@
     "@ephox/wrap-promise-polyfill" "^2.2.0"
     tslib "^1.9.3"
 
+"@ephox/mcagar@^4.2.4":
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/@ephox/mcagar/-/mcagar-4.2.4.tgz#a0d954f49f5bab46a0d4c4908ffe418ff4879bf1"
+  integrity sha512-RDRz2xKqx+kAuGLRi05JgIW0ZaWF/DGBnP3MZQEHfAhid8PE0wPkuR8opHjk+IvvblXJn0nz5GFMC1msy+Xaow==
+  dependencies:
+    "@ephox/agar" "^4.17.2"
+    "@ephox/dom-globals" "^1.1.2"
+    "@ephox/katamari" "^6.1.2"
+    "@ephox/sand" "^3.1.11"
+    "@ephox/sugar" "^6.1.3"
+    "@ephox/wrap-jsverify" "^2.0.1"
+
 "@ephox/sand@^3.1.11":
   version "3.1.11"
   resolved "https://registry.yarnpkg.com/@ephox/sand/-/sand-3.1.11.tgz#fea7d99c900b84528ed4e8bf3b716dc0fc67262c"
