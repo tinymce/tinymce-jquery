@@ -39,7 +39,7 @@ UnitTest.asynctest('LoadTest', (success, failure) => {
       $('div.test-editor').html('<p>Hello world</p>');
     }),
     Step.sync(() => {
-      Assertions.assertHtmlStructure('', '<p>Hello world</p>', editorInstance.getContent());
+      Assertions.assertHtmlStructure('Check editor content', '<p>Hello world</p>', editorInstance.getContent());
     }),
     Step.sync(() => {
       // remove the editor with JQuery
