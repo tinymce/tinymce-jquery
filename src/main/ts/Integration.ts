@@ -13,7 +13,7 @@ declare global {
 type TinymceGlobal = typeof import('tinymce');
 type AllInitFn = (editors: Editor[]) => void;
 
-const getScriptSrc = (settings: Record<string, any>): string => {
+export const getScriptSrc = (settings: Record<string, any>): string => {
   if (typeof settings.script_url === 'string') {
     return settings.script_url;
   } else {
@@ -120,7 +120,7 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string,
   return this;
 };
 
-export default function () {
+export const setupIntegration = () => {
   const jq = getJquery();
   // Add :tinymce pseudo selector this will select elements that has been converted into editor instances
   // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.

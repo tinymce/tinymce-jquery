@@ -1,13 +1,13 @@
 import { Pipeline, Step, Waiter, Assertions } from '@ephox/agar';
 import { Element, Body, Insert, Remove, SelectorFilter, Class } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
-import JqInt from '../../../main/ts/Editor';
+import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr, Cell } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
 UnitTest.asynctest('LoadTest', (success, failure) => {
   // Note that bedrock uses JQuery so we don't need to load it
-  JqInt();
+  setupIntegration();
   const seenSetup = Cell(false);
   const seenInit = Cell(false);
   let editorInstance: Editor;

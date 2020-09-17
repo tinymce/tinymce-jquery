@@ -1,3 +1,3 @@
-import Editor from './Editor';
+import { setupIntegration } from './Integration';
 
-Editor();
+setupIntegration();
