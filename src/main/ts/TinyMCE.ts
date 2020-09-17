@@ -60,6 +60,11 @@ export const loadTinymce = (url: string, callback: TinymceCallback) => {
       if (lazyLoading !== LoadStatus.LOADING_FINISHED && e.type === 'load') {
         lazyLoading = LoadStatus.LOADING_FINISHED;
         const tiny = getTinymce();
+        // the original runs the callback function settings.script_loaded
+        // when the settings.script_url script has been loaded
+        // the second parameter here is to enable that functionality
+        // by indicating if the `url` was loaded into the page (true)
+        // or an existing global or other script was used (false)
         callback(tiny, true);
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < callbacks.length; i++) {
