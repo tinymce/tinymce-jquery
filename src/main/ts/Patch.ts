@@ -9,7 +9,7 @@ const removeEditors = function (this: JQuery<HTMLElement>, name?: string) {
     });
   }
 
-  this.find('span.mceEditor,div.mceEditor').each(function (i, node) {
+  this.find('span.mceEditor,div.mceEditor').each((i, node) => {
     const ed = getTinymce().get(node.id.replace(/_parent$/, ''));
 
     if (ed) {
@@ -47,16 +47,17 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
   // Patch some setter/getter functions these will
   // now be able to set/get the contents of editor instances for
   // example $('#editorid').html('Content'); will update the TinyMCE iframe instance
-  jq.each([ 'text', 'html', 'val' ], (_i, name: 'text' | 'html' | 'val') => {
+  jq.each([ 'text', 'html', 'val' ] as const, (_i, name) => {
     const origFn: Function = jq.fn[name];
     const textProc = (name === 'text');
-    jq.fn[name] = function (...args: any[]): any {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    jq.fn[name] = function (this: typeof jq.fn, ...args: any[]): any {
 
       if (!containsTinyMCE(this)) {
         return origFn.apply(this, args);
       }
 
-      const value = args[0];
+      const value: string | undefined = args[0];
       if (value !== undefined) {
         // set value
         loadOrSave.call(this.filter(':tinymce'), value);
@@ -77,14 +78,14 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
   });
 
   // Makes it possible to use $('#id').append("content"); to append contents to the TinyMCE editor iframe
-  jq.each([ 'append', 'prepend' ], (_i, name: 'append' | 'prepend') => {
+  jq.each([ 'append', 'prepend' ] as const, (_i, name) => {
     const origFn = jq.fn[name];
     const prepend = (name === 'prepend');
 
-    jq.fn[name] = function (...args: any[]): any {
+    jq.fn[name] = (function (this: typeof jq.fn, ...args: Parameters<typeof origFn>): ReturnType<typeof origFn> {
 
       if (!containsTinyMCE(this)) {
-        return origFn.apply(this, args as any);
+        return origFn.apply(this, args);
       }
 
       const value = args[0];
@@ -94,15 +95,15 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
             withTinymceInstance(elm, (ed) => ed.setContent(prepend ? value + ed.getContent() : ed.getContent() + value));
           });
         }
-        origFn.apply(this.not(':tinymce'), args as any);
+        origFn.apply(this.not(':tinymce'), args);
       }
 
       return this; // return original set for chaining
-    };
+    }) as typeof origFn ;
   });
 
   // Makes sure that the editor instance gets properly destroyed when the parent element is removed
-  jq.each([ 'remove', 'replaceWith', 'replaceAll', 'empty' ], (_i, name: 'remove' | 'replaceWith' | 'replaceAll' | 'empty') => {
+  jq.each([ 'remove', 'replaceWith', 'replaceAll', 'empty' ] as const, (_i, name) => {
     const origFn: Function = jq.fn[name];
 
     jq.fn[name] = function (...args: any[]): any {
@@ -112,7 +113,6 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
     };
   });
 
-
   // Makes sure that $('#tinymce_id').attr('value') gets the editors current HTML contents
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const origAttrFn = jq.fn.attr;
@@ -120,18 +120,22 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
     const name = args[0];
 
     if (name !== 'value' || !containsTinyMCE(this)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return origAttrFn.apply(this, args as any);
     }
 
     const value = args[1];
     if (value !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       loadOrSave.call(this.filter(':tinymce'), value);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       origAttrFn.apply(this.not(':tinymce'), args as any);
 
       return this; // return original set for chaining
     } else {
       return withTinymceInstance(this[0],
         (ed) => ed.getContent({ 'save': true }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         (elm) => origAttrFn.apply(jq(elm), args as any)
       );
     }

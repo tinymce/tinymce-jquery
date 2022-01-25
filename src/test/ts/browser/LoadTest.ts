@@ -1,5 +1,5 @@
 import { Pipeline, Step, Waiter, Assertions } from '@ephox/agar';
-import { Element, Body, Insert, Remove, SelectorFilter, Class } from '@ephox/sugar';
+import { SugarElement, SugarBody, Insert, Remove, SelectorFilter, Class } from '@ephox/sugar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr, Cell } from '@ephox/katamari';
@@ -13,13 +13,13 @@ UnitTest.asynctest('LoadTest', (success, failure) => {
   let editorInstance: Editor;
   Pipeline.async('', [
     Step.sync(() => {
-      // make an element for JQuery to target
-      const ce = Element.fromTag('div');
+      // make an SugarElement for JQuery to target
+      const ce = SugarElement.fromTag('div');
       Class.add(ce, 'test-editor');
-      Insert.append(Body.body(), ce);
+      Insert.append(SugarBody.body(), ce);
     }),
     Step.sync(() => {
-      // select the element we just created and use the JQuery extension to make tinymce
+      // select the SugarElement we just created and use the JQuery extension to make tinymce
       $('div.test-editor').tinymce({
         'setup': (_editor: Editor) => {
           seenSetup.set(true);
