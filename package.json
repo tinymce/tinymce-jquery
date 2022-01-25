@@ -1,6 +1,6 @@
 {
   "name": "tinymce-jquery",
-  "version": "1.0.0",
+  "version": "1.0.0-rc",
   "description": "Official TinyMCE integration for JQuery",
   "main": "dist/index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "@ephox/mcagar": "^7.0.4",
     "@ephox/sugar": "^8.1.1",
     "@ephox/swag": "^4.5.0",
+    "@tinymce/beehive-flow": "^0.17.0",
     "@tinymce/eslint-plugin": "^2.0.1",
     "@types/jquery": "^3.5.13",
     "rimraf": "^3.0.2",
