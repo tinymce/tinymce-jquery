@@ -9,7 +9,6 @@
     "test-manual": "bedrock -d src/test/ts",
     "build": "yarn run clean && tsc -p ./tsconfig.json && rollup -c rollup.config.js",
     "lint": "eslint src/**/*.ts",
-    "prepare": "yarn run build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -28,6 +27,7 @@
     "@storybook/addon-essentials": "^6.4.14",
     "@storybook/addon-links": "^6.4.14",
     "@storybook/html": "^6.4.14",
+    "@storybook/storybook-deployer": "^2.8.10",
     "@tinymce/beehive-flow": "^0.17.0",
     "@tinymce/eslint-plugin": "^2.0.1",
     "@types/jquery": "^3.5.13",
