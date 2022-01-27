@@ -3,16 +3,24 @@ import { getJquery } from './JQuery';
 import { patchJQueryFunctions } from './Patch';
 import { loadTinymce, getTinymceInstance } from './TinyMCE';
 
+export interface RawEditorExtendedSettings extends RawEditorSettings {
+  script_url?: string;
+  channel?: string;
+  api_key?: string;
+  selector?: undefined;
+  target?: undefined;
+}
+
 declare global {
   interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     tinymce(): Editor;
-    tinymce(settings: RawEditorSettings): this;
+    tinymce(settings: RawEditorExtendedSettings): this;
   }
 }
 
 type AllInitFn = (editors: Editor[]) => void;
 
-export const getScriptSrc = (settings: Record<string, any>): string => {
+export const getScriptSrc = (settings: RawEditorExtendedSettings): string => {
   if (typeof settings.script_url === 'string') {
     return settings.script_url;
   } else {
@@ -45,7 +53,7 @@ const resolveFunction = <F extends Function> (tiny: TinyMCEGlobal, fnOrStr: unkn
 
 let patchApplied = false;
 
-const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorSettings) {
+const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExtendedSettings) {
   // No match then just ignore the call
   if (!this.length) {
     return this;
