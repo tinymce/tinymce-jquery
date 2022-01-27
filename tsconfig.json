@@ -23,6 +23,7 @@
   },
   "include": [
     "src/main/ts",
-    "src/test/ts"
+    "src/test/ts",
+    "src/stories"
   ]
 }
