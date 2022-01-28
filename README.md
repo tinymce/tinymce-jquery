@@ -5,8 +5,9 @@
 This package is a thin wrapper around [TinyMCE](https://github.com/tinymce/tinymce)
 to make it easier to use in jQuery.
 
-It used to be included with the default TinyMCE bundle up to version 5, as of
-TinyMCE 6 it is now separate.
+The jQuery integration used to be included with the default TinyMCE bundle,
+starting with TinyMCE 6 it has been removed from the TinyMCE bundle and will
+instead be distributed as an independent npm package.
 
 * If you need detailed documentation on TinyMCE, see:
 [TinyMCE Documentation](https://www.tiny.cloud/docs/).
