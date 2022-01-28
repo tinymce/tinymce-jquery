@@ -1,19 +1,26 @@
-import { Editor } from 'tinymce';
+import { Editor, RawEditorSettings, TinyMCE as TinyMCEGlobal } from 'tinymce';
 import { getJquery } from './JQuery';
 import { patchJQueryFunctions } from './Patch';
 import { loadTinymce, getTinymceInstance } from './TinyMCE';
 
+export interface RawEditorExtendedSettings extends RawEditorSettings {
+  script_url?: string;
+  channel?: string;
+  api_key?: string;
+  selector?: undefined;
+  target?: undefined;
+}
+
 declare global {
   interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     tinymce(): Editor;
-    tinymce(settings: Record<string, any>): this;
+    tinymce(settings: RawEditorExtendedSettings): this;
   }
 }
 
-type TinymceGlobal = typeof import('tinymce');
 type AllInitFn = (editors: Editor[]) => void;
 
-export const getScriptSrc = (settings: Record<string, any>): string => {
+export const getScriptSrc = (settings: RawEditorExtendedSettings): string => {
   if (typeof settings.script_url === 'string') {
     return settings.script_url;
   } else {
@@ -23,7 +30,7 @@ export const getScriptSrc = (settings: Record<string, any>): string => {
   }
 };
 
-const getEditors = (tinymce: TinymceGlobal, self: JQuery<HTMLElement>): Editor[] => {
+const getEditors = (tinymce: TinyMCEGlobal, self: JQuery<HTMLElement>): Editor[] => {
   const out: Editor[] = [];
   self.each((i, ele) => {
     out.push(tinymce.get(ele.id));
@@ -31,7 +38,7 @@ const getEditors = (tinymce: TinymceGlobal, self: JQuery<HTMLElement>): Editor[]
   return out;
 };
 
-const resolveFunction = <F extends Function> (tiny: TinymceGlobal, fnOrStr: F | string): F | null => {
+const resolveFunction = <F extends Function> (tiny: TinyMCEGlobal, fnOrStr: unknown): F | null => {
   if (typeof fnOrStr === 'string') {
     const func: unknown = tiny.resolve(fnOrStr);
     if (typeof func === 'function') {
@@ -46,7 +53,7 @@ const resolveFunction = <F extends Function> (tiny: TinymceGlobal, fnOrStr: F | 
 
 let patchApplied = false;
 
-const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string, any>) {
+const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExtendedSettings) {
   // No match then just ignore the call
   if (!this.length) {
     return this;
@@ -93,7 +100,7 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: Record<string,
       const initInstanceCallback = (editor: Editor) => {
         this.css('visibility', '');
         initCount++;
-        const origFn: Function = settings.init_instance_callback;
+        const origFn = settings.init_instance_callback;
         if (typeof origFn === 'function') {
           origFn.call(editor, editor);
         }

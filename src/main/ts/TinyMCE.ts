@@ -1,13 +1,11 @@
-import { Editor } from 'tinymce';
+import { Editor, TinyMCE as TinyMCEGlobal } from 'tinymce';
 import { Global } from './Global';
 
-type TinymceGlobal = typeof import('tinymce');
-
-const tinymce = (): (TinymceGlobal | null) => Global.tinymce ?? null;
+const tinymce = (): (TinyMCEGlobal | null) => Global.tinymce ?? null;
 
 export const hasTinymce = () => !!(tinymce());
 
-export const getTinymce = (): TinymceGlobal => {
+export const getTinymce = (): TinyMCEGlobal => {
   const tiny = tinymce();
   if (tiny != null) {
     return tiny;
@@ -16,7 +14,7 @@ export const getTinymce = (): TinymceGlobal => {
 };
 
 // Returns tinymce instance for the specified element or null if it wasn't found
-export const getTinymceInstance = function (element: Element) {
+export const getTinymceInstance = (element: Element) => {
   let ed = null;
 
   if (element && element.id && hasTinymce()) {
@@ -44,7 +42,7 @@ enum LoadStatus {
   LOADING_FINISHED = 2
 }
 
-type TinymceCallback = (tinymce: TinymceGlobal, loadedFromProvidedUrl: boolean) => void;
+type TinymceCallback = (tinymce: TinyMCEGlobal, loadedFromProvidedUrl: boolean) => void;
 
 let lazyLoading = LoadStatus.NOT_LOADING;
 const callbacks: TinymceCallback[] = [];
@@ -56,7 +54,7 @@ export const loadTinymce = (url: string, callback: TinymceCallback) => {
 
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.onload = function (e: Event) {
+    script.onload = (e: Event) => {
       if (lazyLoading !== LoadStatus.LOADING_FINISHED && e.type === 'load') {
         lazyLoading = LoadStatus.LOADING_FINISHED;
         const tiny = getTinymce();

@@ -1,28 +1,27 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Element, Body, Insert, Remove, SelectorFilter, Html, Class } from '@ephox/sugar';
+import { SugarElement, SugarBody, Insert, Remove, SelectorFilter, Html, Class } from '@ephox/sugar';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { Pipeline } from '@ephox/agar';
 
-UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-
-  const setup = function () {
-    // make an element for JQuery to target
-    const ce = Element.fromTag('div');
+  const setup = () => {
+    // make an SugarElement for JQuery to target
+    const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Html.set(ce,
       '<textarea id="elm1"></textarea>' +
       '<textarea id="elm2"></textarea>' +
       '<textarea id="elm3">Textarea</textarea>'
     );
-    Insert.append(Body.body(), ce);
+    Insert.append(SugarBody.body(), ce);
   };
 
-  suite.asyncTest('Setup editors', function (_, done) {
-    $(function () {
+  suite.asyncTest('Setup editors', (_, done) => {
+    $(() => {
       $('#elm1,#elm2').tinymce({
         'base_url': '/project/tinymce/js/tinymce',
         'init_instance_callback': () => {
@@ -38,13 +37,13 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (succe
     });
   });
 
-  suite.test('Get editor instance', function () {
+  suite.test('Get editor instance', () => {
     LegacyUnit.equal($('#elm1').tinymce().id, 'elm1');
     LegacyUnit.equal($('#elm2').tinymce().id, 'elm2');
     LegacyUnit.equal($('#elm3').tinymce(), null);
   });
 
-  suite.test('Get contents using jQuery', function () {
+  suite.test('Get contents using jQuery', () => {
     getTinymce().get('elm1').setContent('<p>Editor 1</p>');
 
     LegacyUnit.equal($('#elm1').html(), '<p>Editor 1</p>');
@@ -53,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (succe
     LegacyUnit.equal($('#elm1').text(), 'Editor 1');
   });
 
-  suite.test('Set contents using jQuery', function () {
+  suite.test('Set contents using jQuery', () => {
     $('#elm1').html('Test 1');
     LegacyUnit.equal($('#elm1').html(), '<p>Test 1</p>');
 
@@ -67,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (succe
     LegacyUnit.equal($('#elm1').html(), '<p>Test 4</p>');
   });
 
-  suite.test('append/prepend contents using jQuery', function () {
+  suite.test('append/prepend contents using jQuery', () => {
     getTinymce().get('elm1').setContent('<p>Editor 1</p>');
 
     $('#elm1').append('<p>Test 1</p>');
@@ -77,23 +76,23 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (succe
     LegacyUnit.equal($('#elm1').html(), '<p>Test 2</p>\n<p>Editor 1</p>\n<p>Test 1</p>');
   });
 
-  suite.test('Find using :tinymce selector', function () {
+  suite.test('Find using :tinymce selector', () => {
     LegacyUnit.equal($('textarea:tinymce').length, 2);
   });
 
-  suite.test('Set contents using :tinymce selector', function () {
+  suite.test('Set contents using :tinymce selector', () => {
     $('textarea:tinymce').val('Test 1');
     LegacyUnit.equal($('#elm1').val(), '<p>Test 1</p>');
     LegacyUnit.equal($('#elm2').val(), '<p>Test 1</p>');
     LegacyUnit.equal($('#elm3').val(), 'Textarea');
   });
 
-  suite.test('Get contents using :tinymce selector', function () {
+  suite.test('Get contents using :tinymce selector', () => {
     $('textarea:tinymce').val('Test get');
     LegacyUnit.equal($('textarea:tinymce').val(), '<p>Test get</p>');
   });
 
-  suite.test('applyPatch is only called once', function () {
+  suite.test('applyPatch is only called once', () => {
     const options = {};
 
     $('#elm1').tinymce(options);
@@ -108,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', function (succe
   });
 
   setup();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     (getTinymce().EditorManager as any).remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
     success();
