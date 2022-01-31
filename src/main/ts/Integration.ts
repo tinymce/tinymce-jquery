@@ -9,6 +9,8 @@ export interface RawEditorExtendedSettings extends RawEditorSettings {
   api_key?: string;
   selector?: undefined;
   target?: undefined;
+  script_loaded?: () => void;
+  oninit?: string | AllInitFn;
 }
 
 declare global {
