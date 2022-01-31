@@ -1,7 +1,7 @@
 {
   "name": "tinymce-jquery",
   "version": "1.0.0-rc",
-  "description": "Official TinyMCE integration for JQuery",
+  "description": "Official TinyMCE integration for jQuery",
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf lib list",

@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   const suite = LegacyUnit.createSuite();
 
   const setup = () => {
-    // make an SugarElement for JQuery to target
+    // make an SugarElement for jQuery to target
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Html.set(ce,

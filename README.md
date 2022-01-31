@@ -1,4 +1,4 @@
-# Official TinyMCE JQuery integration
+# Official TinyMCE jQuery integration
 
 ## About
 

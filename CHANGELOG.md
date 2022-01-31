@@ -6,4 +6,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Initial release of the TinyMCE JQuery integration as a separate node module.
+- Initial release of the TinyMCE jQuery integration as a separate node module.
