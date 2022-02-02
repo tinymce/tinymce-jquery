@@ -5,9 +5,9 @@ setupIntegration();
 
 // More on default export: https://storybook.js.org/docs/html/writing-stories/introduction#default-export
 export default {
-  'title': 'TinyMCE Editor',
+  title: 'TinyMCE Editor',
   // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
-  'argTypes': {
+  argTypes: {
   },
 } as Meta;
 
@@ -44,7 +44,7 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
       });
     }
   });
-  observer.observe(document.body, { 'attributes': false, 'childList': true, 'subtree': true });
+  observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 
   // when we see this node in the document we'll create tinymce, when it's removed we'll remove tinymce
   return mountNode;
@@ -53,10 +53,10 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
 export const IframeEditor = Template.bind({});
 // More on args: https://storybook.js.org/docs/html/writing-stories/args
 IframeEditor.args = {
-  'inline': false,
+  inline: false,
 };
 
 export const InlineEditor = Template.bind({});
 InlineEditor.args = {
-  'inline': true,
+  inline: true,
 };
