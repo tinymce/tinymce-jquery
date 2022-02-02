@@ -23,8 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   suite.asyncTest('Setup editors', (_, done) => {
     $(() => {
       $('#elm1,#elm2').tinymce({
-        'base_url': '/project/tinymce/js/tinymce',
-        'init_instance_callback': () => {
+        base_url: '/project/tinymce/js/tinymce',
+        init_instance_callback: () => {
           const ed1 = getTinymce().get('elm1');
           const ed2 = getTinymce().get('elm2');
 

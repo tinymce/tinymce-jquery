@@ -21,10 +21,10 @@ UnitTest.asynctest('LoadTest', (success, failure) => {
     Step.sync(() => {
       // select the SugarElement we just created and use the jQuery extension to make tinymce
       $('div.test-editor').tinymce({
-        'setup': (_editor: Editor) => {
+        setup: (_editor: Editor) => {
           seenSetup.set(true);
         },
-        'init_instance_callback': (editor: Editor) => {
+        init_instance_callback: (editor: Editor) => {
           editorInstance = editor;
           seenInit.set(true);
         }

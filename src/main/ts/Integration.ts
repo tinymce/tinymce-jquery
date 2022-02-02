@@ -114,9 +114,9 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
       // Create editor instance and render it
       tinymce.init({
         ...settings,
-        'selector': undefined,
-        'target': elm,
-        'init_instance_callback': initInstanceCallback
+        selector: undefined,
+        target: elm,
+        init_instance_callback: initInstanceCallback
       });
 
     }); // this.each

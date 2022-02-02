@@ -8,7 +8,7 @@
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
     "build": "yarn run clean && tsc -p ./tsconfig.json && rollup -c rollup.config.js",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
