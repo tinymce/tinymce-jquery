@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   suite.test('Get editor instance', () => {
     LegacyUnit.equal($('#elm1').tinymce().id, 'elm1');
     LegacyUnit.equal($('#elm2').tinymce().id, 'elm2');
-    LegacyUnit.equal($('#elm3').tinymce(), null);
+    LegacyUnit.equal($('#elm3').tinymce(), undefined);
   });
 
   suite.test('Get contents using jQuery', () => {

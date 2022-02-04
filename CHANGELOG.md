@@ -7,3 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Initial release of the TinyMCE jQuery integration as a separate node module.
+
+### Changed
+- The `$(e).tinymce({...})` now returns a `Promise` of all initialized editors instead of the `this` object.
+- The `$(e).tinymce()` now returns `undefined` when no editor is present instead of `null`.
