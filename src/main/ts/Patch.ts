@@ -1,10 +1,6 @@
-import { Arr, Thunk, Type } from '@ephox/katamari';
+import { Arr, Obj, Thunk, Type } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
-import { getTinymce, hasTinymce, withTinymceInstance } from './TinyMCE';
-
-type AttrValueFn<T extends HTMLElement> = (this: T, index: number, attr: string) => string | number | void | undefined;
-type AttrValueType<T extends HTMLElement> = string | number | null | AttrValueFn<T>;
-type JQueryAttrParams<T extends HTMLElement> = [name: string] | [attributes: JQuery.PlainObject] | [name: string, value: AttrValueType<T>];
+import { getTinymce, withTinymceInstance } from './TinyMCE';
 
 const removeTargetElementEditor = (suspectedTargetElements: JQuery<HTMLElement>) => {
   // check if we have a target element, if so remove the related TinyMCE
@@ -24,59 +20,97 @@ const removeChildEditors = (subject: JQuery<HTMLElement>) => {
   });
 };
 
+/**
+ * Remove editors associated with the target elements in subject
+ * and remove any editors on descendants of subject.
+ *
+ * @param subject the element set to remove editors.
+ */
 const removeEditors = (subject: JQuery<HTMLElement>) => {
   removeTargetElementEditor(subject);
   removeChildEditors(subject);
 };
 
-// Checks if the specified set contains tinymce instances
-const containsTinyMCE = (matchedSet: JQuery<HTMLElement>) =>
-  !!((matchedSet) && (matchedSet.length) && hasTinymce() && (matchedSet.is(':tinymce')));
-
 /** type of jQuery's attr function */
 type JQueryAttrFn = JQueryStatic['fn']['attr'];
 
+type JQueryAttrValue = string | number | null | undefined;
+type JQueryAttrProducer = (this: HTMLElement, index: number, attr: JQueryAttrValue) => JQueryAttrValue;
+type JQueryAttrValueOrProducer = JQueryAttrValue | JQueryAttrProducer;
+type JQueryAttrParams = [name: string] | [attributes: Record<string, JQueryAttrValueOrProducer>] | [name: string, value: JQueryAttrValueOrProducer];
+
 /**
+ * Patch jQuery's `attr` function.
+ *
  * Makes sure that $('#tinymce_id').attr('value') gets the editors current HTML contents
+ *
+ * @param origAttrFn the original `attr()` function.
+ * @returns the patched `attr()` function.
  */
 const patchJqAttr = (origAttrFn: JQueryAttrFn): JQueryAttrFn =>
-  function (this: JQuery<HTMLElement>, ...args: JQueryAttrParams<HTMLElement>): string | undefined | JQuery<HTMLElement> {
-    const [ name, value ] = args;
-    // TODO check the case where name is an attribute map
-    if (name !== 'value' || !containsTinyMCE(this)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return origAttrFn.apply(this, args as any);
-    }
-    // name is 'value', other cases are rejected above
-    if (value === undefined) {
-    // when the value is undefined get the value
-      return withTinymceInstance(this[0],
-        (ed) => ed.getContent({ save: true }),
-        (_elm) => origAttrFn.call(this, name)
-      );
-    }
-    // This is about to set the value which will wipe out child nodes.
-    // If for some crazy reason there are child nodes of this which
-    // have been converted into tinymce editors they are first removed...
-    removeChildEditors(this);
-    if (typeof value === 'string' || typeof value === 'number') {
-    // Saves the contents before get/set value of textarea/div
-      this.each((_i, elm) => withTinymceInstance(elm, (ed) => void ed.setContent('' + value)));
-    } else if (value === null) {
-    // normally this would mean "remove the value attribute",
-    // however that doesn't make sense so instead we'll clear the content.
-      this.each((_i, elm) => withTinymceInstance(elm, (ed) => void ed.setContent('')));
-    } else {
-    // the function allows updating based on the previous value
-      this.each((_i, elm) => withTinymceInstance(elm, (ed) => {
-        const prevValue = ed.getContent();
-        const newValue = value.call(elm, 0, prevValue);
-        if (typeof newValue === 'string' || typeof newValue === 'number') {
-          ed.setContent('' + newValue);
+  function (this: JQuery<HTMLElement>, ...args: JQueryAttrParams): string | undefined | JQuery<HTMLElement> {
+
+    // Helper to set the value attribute or TinyMCE's content
+    const setValue = (valueOrProducer: JQueryAttrValueOrProducer) => {
+      if (valueOrProducer === undefined) {
+        return;
+      }
+      // When using inline editors you could in theory initialize TinyMCE on
+      // a element inside the editor. This is meant to remove those editors
+      // before we accidentally overwrite them.
+      removeChildEditors(this);
+      this.each((i, elm) => withTinymceInstance(elm, (ed) => {
+        if (typeof valueOrProducer === 'string' || typeof valueOrProducer === 'number') {
+          ed.setContent('' + valueOrProducer);
+        } else if (valueOrProducer === null) {
+          ed.setContent('');
+        } else {
+          const prevValue = ed.getContent();
+          const newValue = valueOrProducer.call(elm, i, prevValue);
+          if (typeof newValue === 'string' || typeof newValue === 'number') {
+            ed.setContent('' + newValue);
+          } else if (newValue === null) {
+            ed.setContent('');
+          }
+        }
+      }, (el) => {
+        if (typeof valueOrProducer === 'function') {
+          // these steps are so the correct index is passed to the producer fn
+          const origValue = origAttrFn.call($(el), 'value');
+          const newValue = valueOrProducer.call(el, i, origValue as string);
+          (origAttrFn as Function).call($(el), 'value', newValue);
+        } else {
+          (origAttrFn as Function).call($(el), 'value', valueOrProducer);
         }
       }));
+    };
+
+    const nameOrBatch = args[0];
+    if (typeof nameOrBatch === 'string') {
+      const name = nameOrBatch;
+      if (name !== 'value') {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        return origAttrFn.apply(this, args as any);
+      }
+      const value = args[1];
+      if (value !== undefined) {
+        setValue(value);
+        return this;
+      } else {
+        // when the value is undefined get the value
+        return withTinymceInstance(this[0],
+          (ed) => ed.getContent({ save: true }),
+          (_elm) => origAttrFn.call(this, 'value')
+        );
+      }
+    } else {
+      const batch = { ...nameOrBatch };
+      if (Obj.has(batch, 'value')) {
+        setValue(batch.value);
+        delete batch.value;
+      }
+      return Obj.keys(batch).length > 0 ? (origAttrFn as Function).call(this, batch) : this;
     }
-    return this; // return original set of elements for chaining
   } as JQueryAttrFn;
 
 /** Type of jQuery remove function */
