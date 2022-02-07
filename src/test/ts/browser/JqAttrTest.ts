@@ -2,31 +2,10 @@
 /* eslint-disable @tinymce/prefer-fun */
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
-import { Editor } from 'tinymce';
 import { setupIntegration } from '../../../main/ts/Integration';
+import { createEditor } from '../Utils';
 
 setupIntegration();
-
-const createEditor = async (action: (targetElm: JQuery<HTMLElement>, editors: Editor) => void | Promise<void>) => {
-  // TinyMCE must be in the document to work
-  const ce = SugarElement.fromTag('textarea');
-  Insert.append(SugarBody.body(), ce);
-  try {
-    const targetElm = $(ce.dom);
-    const editors = await targetElm.tinymce({ });
-    try {
-      const maybeAsync = action(targetElm, editors[0]);
-      if (maybeAsync) {
-        await maybeAsync;
-      }
-    } finally {
-      editors[0].remove();
-    }
-  } finally {
-    Remove.remove(ce);
-  }
-};
 
 describe('Check jQuery\'s `.attr()` function', () => {
   context('passing a single string gets the associated attribute value or `undefined` when the attribute is not set', () => {
