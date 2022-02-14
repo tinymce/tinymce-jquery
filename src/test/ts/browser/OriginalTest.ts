@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   const suite = LegacyUnit.createSuite();
 
   const setup = () => {
-    // make an SugarElement for JQuery to target
+    // make an SugarElement for jQuery to target
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Html.set(ce,
@@ -23,8 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   suite.asyncTest('Setup editors', (_, done) => {
     $(() => {
       $('#elm1,#elm2').tinymce({
-        'base_url': '/project/tinymce/js/tinymce',
-        'init_instance_callback': () => {
+        base_url: '/project/tinymce/js/tinymce',
+        init_instance_callback: () => {
           const ed1 = getTinymce().get('elm1');
           const ed2 = getTinymce().get('elm2');
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   suite.test('Get editor instance', () => {
     LegacyUnit.equal($('#elm1').tinymce().id, 'elm1');
     LegacyUnit.equal($('#elm2').tinymce().id, 'elm2');
-    LegacyUnit.equal($('#elm3').tinymce(), null);
+    LegacyUnit.equal($('#elm3').tinymce(), undefined);
   });
 
   suite.test('Get contents using jQuery', () => {

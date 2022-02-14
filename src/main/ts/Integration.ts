@@ -9,12 +9,14 @@ export interface RawEditorExtendedSettings extends RawEditorSettings {
   api_key?: string;
   selector?: undefined;
   target?: undefined;
+  script_loaded?: () => void;
+  oninit?: string | AllInitFn;
 }
 
 declare global {
   interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     tinymce(): Editor;
-    tinymce(settings: RawEditorExtendedSettings): this;
+    tinymce(settings: RawEditorExtendedSettings): Promise<Editor[]>;
   }
 }
 
@@ -53,78 +55,86 @@ const resolveFunction = <F extends Function> (tiny: TinyMCEGlobal, fnOrStr: unkn
 
 let patchApplied = false;
 
-const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExtendedSettings) {
+const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExtendedSettings): Editor | undefined | Promise<Editor[]> {
   // No match then just ignore the call
   if (!this.length) {
-    return this;
+    return !settings ? undefined : Promise.resolve([]);
   }
 
   // Get editor instance
   if (!settings) {
-    return getTinymceInstance(this[0]);
+    return getTinymceInstance(this[0]) ?? undefined;
   }
 
   // Hide textarea to avoid flicker
   this.css('visibility', 'hidden');
 
-  // Load tinymce
-  loadTinymce(getScriptSrc(settings), (tinymce, loadedFromProvidedUrl) => {
-    // Execute callback after tinymce has been loaded and before the initialization occurs
-    if (loadedFromProvidedUrl && settings.script_loaded) {
-      settings.script_loaded();
-    }
-    // Apply patches to the jQuery object, only once
-    if (!patchApplied) {
-      patchApplied = true;
-      patchJQueryFunctions(getJquery());
-    }
-
-    // track how many editors have initialized so we can run a callback
-    let initCount = 0;
-    const allInitCallback = resolveFunction<AllInitFn>(tinymce, settings.oninit);
-
-    // Create an editor instance for each matched node
-    this.each((_i, elm) => {
-
-      // Generate unique id for target element if needed
-      if (!elm.id) {
-        elm.id = tinymce.DOM.uniqueId();
+  return new Promise<Editor[]>((resolve) => {
+    // Load tinymce
+    loadTinymce(getScriptSrc(settings), (tinymce, loadedFromProvidedUrl) => {
+      // Execute callback after tinymce has been loaded and before the initialization occurs
+      if (loadedFromProvidedUrl && settings.script_loaded) {
+        settings.script_loaded();
+      }
+      // Apply patches to the jQuery object, only once
+      if (!patchApplied) {
+        patchApplied = true;
+        patchJQueryFunctions(getJquery());
       }
 
-      // Only init the editor once
-      if (tinymce.get(elm.id)) {
-        initCount++;
-        return;
-      }
-
-      const initInstanceCallback = (editor: Editor) => {
-        this.css('visibility', '');
-        initCount++;
-        const origFn = settings.init_instance_callback;
-        if (typeof origFn === 'function') {
-          origFn.call(editor, editor);
+      // track how many editors have initialized so we can run a callback
+      let initCount = 0;
+      const allInitCallback = resolveFunction<AllInitFn>(tinymce, settings.oninit);
+      const allInitialized = () => {
+        const editors = getEditors(tinymce, this);
+        if (allInitCallback) {
+          allInitCallback(editors);
         }
-        if (allInitCallback && initCount === this.length) {
-          allInitCallback(getEditors(tinymce, this));
-        }
+        resolve(editors);
       };
 
-      // Create editor instance and render it
-      tinymce.init({
-        ...settings,
-        'selector': undefined,
-        'target': elm,
-        'init_instance_callback': initInstanceCallback
-      });
+      // Create an editor instance for each matched node
+      this.each((_i, elm) => {
 
-    }); // this.each
+        // Generate unique id for target element if needed
+        if (!elm.id) {
+          elm.id = tinymce.DOM.uniqueId();
+        }
 
-    if (allInitCallback && initCount === this.length) {
-      allInitCallback(getEditors(tinymce, this));
-    }
+        // Only init the editor once
+        if (tinymce.get(elm.id)) {
+          initCount++;
+          return;
+        }
 
-  }); // load tinymce
-  return this;
+        const initInstanceCallback = (editor: Editor) => {
+          this.css('visibility', '');
+          initCount++;
+          const origFn = settings.init_instance_callback;
+          if (typeof origFn === 'function') {
+            origFn.call(editor, editor);
+          }
+          if (initCount === this.length) {
+            allInitialized();
+          }
+        };
+
+        // Create editor instance and render it
+        tinymce.init({
+          ...settings,
+          selector: undefined,
+          target: elm,
+          init_instance_callback: initInstanceCallback
+        });
+
+      }); // this.each
+
+      if (initCount === this.length) {
+        allInitialized();
+      }
+
+    }); // load tinymce
+  });
 };
 
 export const setupIntegration = () => {

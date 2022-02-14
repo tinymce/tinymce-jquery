@@ -10,7 +10,6 @@
         "sourceType": "module"
       },
       "rules": {
-        "quote-props": ["error", "always"]
       }
     },
     {
