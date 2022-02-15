@@ -1,4 +1,4 @@
-import { Arr, Obj, Thunk, Type } from '@ephox/katamari';
+import { Obj, Thunk, Type } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
 import { getTinymce, withTinymceInstance } from './TinyMCE';
 
@@ -208,22 +208,11 @@ type JQueryPendProducer = (this: HTMLElement, index: number, html: string) => JQ
  * @param content the content to stringify.
  * @returns the content converted into a html string.
  */
-const stringifyContent = (content: JQueryPendContent[]): string => {
-  const strContent = Arr.map(content, (item) => {
-    if (typeof item === 'string') {
-      return item;
-    } else if (Type.isArray(item)) {
-      return stringifyContent(item);
-    } else {
-      // TODO should these wrap the node first to get outer HTML?
-      if (item instanceof Node) {
-        return $(item).html();
-      } else {
-        return item.html();
-      }
-    }
-  });
-  return strContent.join('');
+const stringifyContent = (origFn: JQueryPendFn, content: JQueryPendContent[]): string => {
+  type T = (...contents: (string | JQuery.TypeOrArray<JQuery.Node | JQuery<JQuery.Node>>)[]) => JQuery<HTMLElement>;
+  const elem = document.createElement('div');
+  (origFn as T).apply($(elem), content);
+  return elem.innerHTML;
 };
 
 /**
@@ -238,30 +227,22 @@ const stringifyContent = (content: JQueryPendContent[]): string => {
 const patchJqPend = (origFn: JQueryPendFn, position: 'append' | 'prepend'): JQueryPendFn =>
   function (this: JQuery<HTMLElement>, ...args: [JQueryPendProducer] | JQueryPendContent[]) {
     const prepend = position === 'prepend';
+    let contentStr: (elm: HTMLElement, origContent: string) => string;
     if (args.length === 1 && typeof args[0] === 'function') {
       const contentFn = args[0] as JQueryPendProducer;
-      const contentStr = (el: HTMLElement, str: string) => stringifyContent([ contentFn.call(el, 0, str) ]);
-      this.each((_i2, elm) => withTinymceInstance(elm,
-        (ed) => {
-          const oldContent = ed.getContent();
-          const addition = contentStr(elm, oldContent);
-          ed.setContent(prepend ? addition + oldContent : oldContent + addition);
-        },
-        (el) => void (origFn as Function).apply($(el), args)
-      ));
+      contentStr = (el: HTMLElement, origContent: string) => stringifyContent(origFn, [ contentFn.call(el, 0, origContent) ]);
     } else {
       const content = args as JQueryPendContent[];
-      const contentStr = Thunk.cached(() => stringifyContent(content));
-
-      this.each((_i2, elm) => withTinymceInstance(elm,
-        (ed) => {
-          const oldContent = ed.getContent();
-          const addition = contentStr();
-          ed.setContent(prepend ? addition + oldContent : oldContent + addition);
-        },
-        (el) => void (origFn as Function).apply($(el), args)
-      ));
+      contentStr = Thunk.cached((_el: HTMLElement, _origContent: string) => stringifyContent(origFn, content));
     }
+    this.each((_i2, elm) => withTinymceInstance(elm,
+      (ed) => {
+        const oldContent = ed.getContent();
+        const addition = contentStr(elm, oldContent);
+        ed.setContent(prepend ? addition + oldContent : oldContent + addition);
+      },
+      (el) => void (origFn as Function).apply($(el), args)
+    ));
     return this;
   };
 
