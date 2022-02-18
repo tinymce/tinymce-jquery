@@ -13,7 +13,7 @@ const removeChildEditors = (subject: JQuery<HTMLElement>) => {
   // because we'd only expect the target element to contain HTML...
   subject.each((i, elem) => {
     for (const editor of getTinymce().get()) {
-      if ($.contains(elem, editor.getContainer())) {
+      if ($.contains(elem, editor.getContentAreaContainer())) {
         editor.remove();
       }
     }
