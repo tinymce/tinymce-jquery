@@ -155,7 +155,7 @@ type JQueryRemoveFn = JQueryStatic['fn']['remove'];
  */
 const patchJqRemove = (origFn: JQueryRemoveFn): JQueryRemoveFn =>
   function <T extends HTMLElement>(this: JQuery<T>, selector?: string): JQuery<T> {
-    removeEditors(selector !== undefined ? this.find(selector) : this);
+    removeEditors(selector !== undefined ? this.filter(selector) : this);
     return origFn.call(this, selector) as JQuery<T>;
   };
 
