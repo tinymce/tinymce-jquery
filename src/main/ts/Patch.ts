@@ -88,21 +88,12 @@ const patchJqAttr = (origAttrFn: JQueryAttrFn): JQueryAttrFn =>
       // before we accidentally overwrite them.
       removeChildEditors(this);
       this.each((i, elm) => withTinymceInstance(elm, (ed) => {
-        if (typeof valueOrProducer === 'string' || typeof valueOrProducer === 'number') {
-          ed.setContent('' + valueOrProducer);
-        } else if (valueOrProducer === null) {
-          ed.setContent('');
-        } else {
-          const prevValue = ed.getContent();
-          const newValue = valueOrProducer.call(elm, i, prevValue);
-          if (typeof newValue === 'string' || typeof newValue === 'number') {
-            ed.setContent('' + newValue);
-          } else if (newValue === null) {
-            ed.setContent('');
-          }
+        const value = Type.isFunction(valueOrProducer) ? valueOrProducer.call(elm, i, ed.getContent()) : valueOrProducer;
+        if (value !== undefined) {
+          ed.setContent(value === null ? '' : `${value}`);
         }
       }, (el) => {
-        if (typeof valueOrProducer === 'function') {
+        if (Type.isFunction(valueOrProducer)) {
           // these steps are so the correct index is passed to the producer fn
           const origValue = origAttrFn.call($(el), 'value');
           const newValue = valueOrProducer.call(el, i, origValue as string);
@@ -114,7 +105,7 @@ const patchJqAttr = (origAttrFn: JQueryAttrFn): JQueryAttrFn =>
     };
 
     const nameOrBatch = args[0];
-    if (typeof nameOrBatch === 'string') {
+    if (Type.isString(nameOrBatch)) {
       const name = nameOrBatch;
       if (name !== 'value') {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -126,10 +117,14 @@ const patchJqAttr = (origAttrFn: JQueryAttrFn): JQueryAttrFn =>
         return this;
       } else {
         // when the value is undefined get the value
-        return withTinymceInstance(this[0],
-          (ed) => ed.getContent({ save: true }),
-          (_elm) => origAttrFn.call(this, 'value')
-        );
+        if (this.length >= 1) {
+          return withTinymceInstance(this[0],
+            (ed) => ed.getContent(),
+            (_elm) => origAttrFn.call(this, 'value')
+          );
+        }
+        // when no elements exist to get the value attribute return undefined
+        return undefined;
       }
     } else {
       const batch = { ...nameOrBatch };
@@ -177,11 +172,7 @@ const patchJqEmpty = (origFn: JQueryEmptyFn): JQueryEmptyFn =>
     // as we are deleting the content of all in `this` we must first remove the editors
     removeChildEditors(this);
     // all editors linked to `this` must be emptied too
-    this.each((_i, elem) => {
-      withTinymceInstance(elem, (ed) => {
-        ed.setContent('');
-      });
-    });
+    withEachLinkedEditor(this, (ed) => void ed.setContent(''));
     // finally do the empty call
     return origFn.call(this);
   };
@@ -198,10 +189,10 @@ type JQueryPendProducer = (this: HTMLElement, index: number, html: string) => JQ
  * @returns the content converted into a html string.
  */
 const stringifyContent = (origFn: JQueryPendFn, content: JQueryPendContent[]): string => {
-  type T = (...contents: (string | JQuery.TypeOrArray<JQuery.Node | JQuery<JQuery.Node>>)[]) => JQuery<HTMLElement>;
-  const elem = document.createElement('div');
-  (origFn as T).apply($(elem), content);
-  return elem.innerHTML;
+  type PendContentType = (...contents: (string | JQuery.TypeOrArray<JQuery.Node | JQuery<JQuery.Node>>)[]) => JQuery<HTMLElement>;
+  const dummy = document.createElement('div');
+  (origFn as PendContentType).apply($(dummy), content);
+  return dummy.innerHTML;
 };
 
 /**
@@ -217,7 +208,7 @@ const patchJqPend = (origFn: JQueryPendFn, position: 'append' | 'prepend'): JQue
   function (this: JQuery<HTMLElement>, ...args: [JQueryPendProducer] | JQueryPendContent[]) {
     const prepend = position === 'prepend';
     let contentStr: (elm: HTMLElement, origContent: string) => string;
-    if (args.length === 1 && typeof args[0] === 'function') {
+    if (args.length === 1 && Type.isFunction(args[0])) {
       const contentFn = args[0] as JQueryPendProducer;
       contentStr = (el: HTMLElement, origContent: string) => stringifyContent(origFn, [ contentFn.call(el, 0, origContent) ]);
     } else {
@@ -275,13 +266,13 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
         withTinymceInstance(el, (ed) => {
           // evaluate any producer to get the value
           const htmlOrNode = (
-            typeof htmlOrNodeOrProducer === 'function'
+            Type.isFunction(htmlOrNodeOrProducer)
               ? htmlOrNodeOrProducer.call(el, i, ed.getContent())
               : htmlOrNodeOrProducer
           );
           // convert a node into html
           const html = (
-            typeof htmlOrNode === 'string'
+            Type.isString(htmlOrNode)
               ? htmlOrNode
               : (() => {
                 if (SandHTMLElement.isPrototypeOf(htmlOrNode)) {
@@ -300,7 +291,7 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
           // finally update the editor with the html
           ed.setContent(html);
         }, (elm) => {
-          if (typeof htmlOrNodeOrProducer === 'function') {
+          if (Type.isFunction(htmlOrNodeOrProducer)) {
             // these steps are so the correct index is passed to the producer fn
             const origValue = origFn.call($(el));
             const newValue = htmlOrNodeOrProducer.call(el, i, origValue);
@@ -355,7 +346,7 @@ const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
           dummy.innerText = `${val}`;
           ed.setContent(dummy.innerHTML);
         }, (elm) => {
-          if (typeof valueOrProducer === 'function') {
+          if (Type.isFunction(valueOrProducer)) {
             // these steps are so the correct index is passed to the producer fn
             const origValue = origFn.call($(el));
             const newValue = valueOrProducer.call(el, i, origValue);
@@ -385,9 +376,9 @@ const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
     if (valueOrProducer === undefined) {
       if (this.length >= 1) {
         return withTinymceInstance(this[0], (ed) => ed.getContent(), (elm) => origFn.call($(elm)));
-      } else {
-        return undefined;
       }
+      // when no elements exist to query simply return undefined
+      return undefined;
     } else {
       type ValSetterType = (valueOrProducer: JQueryValValue | JQueryValProducer) => JQuery<HTMLElement>;
       this.each((i, el) => {
