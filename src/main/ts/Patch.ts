@@ -159,45 +159,6 @@ const patchJqRemove = (origFn: JQueryRemoveFn): JQueryRemoveFn =>
     return origFn.call(this, selector) as JQuery<T>;
   };
 
-/** Type of jQuery's `replaceWith` function */
-type JQueryReplaceWithFn = JQueryStatic['fn']['replaceWith'];
-
-/**
- * Patch jQuery's `replaceWith` function.
- *
- * The `replaceWith` function replaces the original nodes with the passed nodes
- * or content, hence any existing TinyMCE editor should be destroyed first.
- *
- * @param origFn the original function.
- * @returns the patched function.
- */
-const patchJqReplaceWith = (origFn: JQueryReplaceWithFn): JQueryReplaceWithFn =>
-  function (this: JQuery<HTMLElement>, ...args: Parameters<JQueryReplaceWithFn>): JQuery<HTMLElement> {
-    removeEditors(this);
-    return origFn.apply(this, args);
-  };
-
-/** Type of jQuery's `replaceAll` function */
-type JQueryReplaceAllFn = JQueryStatic['fn']['replaceAll'];
-
-/**
- * Patch jQuery's `replaceAll` function.
- *
- * The `replaceAll` function replaces the target elements with `this`, hence
- * any TinyMCE instance in the target must be destroyed because it is being
- * removed from the DOM and any TinyMCE in `this` must be destroyed because
- * it is being moved.
- *
- * @param origFn the original function.
- * @returns the patched function.
- */
-const patchJqReplaceAll = (origFn: JQueryReplaceAllFn): JQueryReplaceAllFn =>
-  function (this: JQuery<HTMLElement>, target: string | JQuery<HTMLElement> | JQuery.TypeOrArray<Element>): JQuery<HTMLElement> {
-    // TODO remove TinyMCE from targets
-    removeEditors(this);
-    return origFn.call(this, target);
-  };
-
 /** Type of jQuery's `empty` function */
 type JQueryEmptyFn = JQueryStatic['fn']['empty'];
 
@@ -379,6 +340,7 @@ const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
       });
       return out;
     } else { // set text value
+      type TextSetterType = (valueOrProducer: JQueryTextValue | JQueryTextProducer) => JQuery<HTMLElement>;
       // first we need to remove any editors we would overwrite
       removeChildEditors(this);
       // for all the nodes
@@ -386,13 +348,21 @@ const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
         withTinymceInstance(el, (ed) => {
           // evaluate any producer to get the value
           const val = Type.isFunction(valueOrProducer) ? valueOrProducer.call(el, i, ed.getContent({ format: 'text' })) : valueOrProducer;
-          const text = `${val}`;
-          // hmmm, we don't really have a way of setting text, this is not going to work well...
-          // TODO consider if we can do what is done in lindy-hop or other alternatives like paste as text?
-          ed.setContent(text);
+          // set the text on a dummy element so we can extract the HTML and set it on TinyMCE
+          // note that we deliberately don't use jQuery here as it seems to use textContent
+          // and the result is not useful...
+          const dummy = document.createElement('div');
+          dummy.innerText = `${val}`;
+          ed.setContent(dummy.innerHTML);
         }, (elm) => {
-          // work around bad type inference
-          (origFn as Function).call($(elm), valueOrProducer);
+          if (typeof valueOrProducer === 'function') {
+            // these steps are so the correct index is passed to the producer fn
+            const origValue = origFn.call($(el));
+            const newValue = valueOrProducer.call(el, i, origValue);
+            (origFn as TextSetterType).call($(el), newValue);
+          } else {
+            (origFn as TextSetterType).call($(elm), valueOrProducer);
+          }
         });
       });
       return this;
@@ -449,8 +419,6 @@ export const patchJQueryFunctions = (jq: JQueryStatic) => {
   jq.fn.append = patchJqPend(jq.fn.append, 'append');
   jq.fn.prepend = patchJqPend(jq.fn.prepend, 'prepend');
   jq.fn.remove = patchJqRemove(jq.fn.remove);
-  jq.fn.replaceWith = patchJqReplaceWith(jq.fn.replaceWith);
-  jq.fn.replaceAll = patchJqReplaceAll(jq.fn.replaceAll);
   jq.fn.empty = patchJqEmpty(jq.fn.empty);
   jq.fn.attr = patchJqAttr(jq.fn.attr);
   /* eslint-enable @typescript-eslint/unbound-method */

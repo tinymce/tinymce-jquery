@@ -12,5 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `$(e).tinymce({...})` now returns a `Promise` of all initialized editors instead of the `this` object.
 - The `$(e).tinymce()` now returns `undefined` when no editor is present instead of `null`.
 
+### Removed
+- The `$(e).replaceAll(...)` is not patched and won't attempt to remove effected TinyMCE instances.
+- The `$(e).replaceWith(...)` is not patched and won't attempt to remove effected TinyMCE instances.
+
 ### Fixed
 - Removing an element destroys all nested editors.
