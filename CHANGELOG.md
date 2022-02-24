@@ -17,4 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `$(e).replaceWith(...)` is not patched and won't attempt to remove effected TinyMCE instances.
 
 ### Fixed
-- Removing an element destroys all nested editors.
+- Removing an element with `$(e).remove()` destroys all contained editors.
+- Removing child elements with `$(e).empty()` destroys all contained editors.
+- Overwriting an element with `$(e).text(value)` or `$(e).html(value)` destroys all contained editors
