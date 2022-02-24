@@ -7783,6 +7783,14 @@ jest-util@^26.6.2:
     is-ci "^2.0.0"
     micromatch "^4.0.2"
 
+jest-worker@^24.0.0:
+  version "24.9.0"
+  resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-24.9.0.tgz#5dbfdb5b2d322e98567898238a9697bcce67b3e5"
+  integrity sha512-51PE4haMSXcHohnSMdM42anbvZANYTqMrr52tVKPqqsPJMzoP6FYYDVqahX/HrAoKEKz3uUPzSvKs9A3qR4iVw==
+  dependencies:
+    merge-stream "^2.0.0"
+    supports-color "^6.1.0"
+
 jest-worker@^26.5.0, jest-worker@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-26.6.2.tgz#7f72cbc4d643c365e27b9fd775f9d0eaa9c7a8ed"
@@ -10447,6 +10455,16 @@ rollup-plugin-typescript2@^0.24.0:
     rollup-pluginutils "2.8.1"
     tslib "1.10.0"
 
+rollup-plugin-uglify@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-uglify/-/rollup-plugin-uglify-6.0.4.tgz#65a0959d91586627f1e46a7db966fd504ec6c4e6"
+  integrity sha512-ddgqkH02klveu34TF0JqygPwZnsbhHVI6t8+hGTcYHngPkQb5MIHI0XiztXIN/d6V9j+efwHAqEL7LspSxQXGw==
+  dependencies:
+    "@babel/code-frame" "^7.0.0"
+    jest-worker "^24.0.0"
+    serialize-javascript "^2.1.2"
+    uglify-js "^3.4.9"
+
 rollup-pluginutils@2.8.1:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-2.8.1.tgz#8fa6dd0697344938ef26c2c09d2488ce9e33ce97"
@@ -10652,6 +10670,11 @@ serialize-error@^8.0.0:
   integrity sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==
   dependencies:
     type-fest "^0.20.2"
+
+serialize-javascript@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
+  integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
 
 serialize-javascript@^4.0.0:
   version "4.0.0"
@@ -11220,6 +11243,13 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
+supports-color@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-6.1.0.tgz#0764abc69c63d5ac842dd4867e8d025e880df8f3"
+  integrity sha512-qe1jfm1Mg7Nq/NSh6XE24gPXROEVsWHxC1LIx//XNlD9iw7YZQGjZNjYN7xGaEG6iKdA8EtNFW6R0gjnVXp+wQ==
+  dependencies:
+    has-flag "^3.0.0"
+
 supports-color@^7.0.0, supports-color@^7.1.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
@@ -11663,7 +11693,7 @@ ua-parser-js@^1.0.1:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.2.tgz#e2976c34dbfb30b15d2c300b2a53eac87c57a775"
   integrity sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==
 
-uglify-js@^3.1.4:
+uglify-js@^3.1.4, uglify-js@^3.4.9:
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.15.1.tgz#9403dc6fa5695a6172a91bc983ea39f0f7c9086d"
   integrity sha512-FAGKF12fWdkpvNJZENacOH0e/83eG6JyVQyanIJaBXCN1J11TUQv1T1/z8S+Z0CG0ZPk1nPcreF/c7lrTd0TEQ==
