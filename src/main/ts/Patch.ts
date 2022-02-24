@@ -372,7 +372,7 @@ const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
 type JQueryValFn = JQueryStatic['fn']['val'];
 
 type JQueryValValue = string | number | string[];
-type JQueryValProducer = (this: HTMLElement, index: number, value: string) => string;
+type JQueryValProducer = (this: HTMLElement, index: number, value: JQueryValValue) => string;
 
 /**
  * Patch jQuery's `val` function.
@@ -389,6 +389,7 @@ const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
         return undefined;
       }
     } else {
+      type ValSetterType = (valueOrProducer: JQueryValValue | JQueryValProducer) => JQuery<HTMLElement>;
       this.each((i, el) => {
         withTinymceInstance(el, (ed) => {
           const val = Type.isFunction(valueOrProducer) ? valueOrProducer.call(el, i, ed.getContent()) : valueOrProducer;
@@ -397,7 +398,14 @@ const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
           ed.setContent(html);
         }, (elm) => {
           // work around bad type inference
-          (origFn as Function).call($(elm), valueOrProducer);
+          if (Type.isFunction(valueOrProducer)) {
+            // these steps are so the correct index is passed to the producer fn
+            const origValue = origFn.call($(el));
+            const newValue = valueOrProducer.call(el, i, origValue ?? '');
+            (origFn as ValSetterType).call($(el), newValue);
+          } else {
+            (origFn as ValSetterType).call($(elm), valueOrProducer);
+          }
         });
       });
     }
