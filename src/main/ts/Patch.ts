@@ -1,24 +1,53 @@
 import { Obj, Thunk, Type } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
+import { Editor } from 'tinymce';
 import { getTinymce, withTinymceInstance } from './TinyMCE';
 
-const removeTargetElementEditor = (suspectedTargetElements: JQuery<HTMLElement>) => {
-  // check if we have a target element, if so remove the related TinyMCE
-  suspectedTargetElements.each((_i, elm) => withTinymceInstance(elm, (ed) => ed.remove()));
-};
-
-const removeChildEditors = (subject: JQuery<HTMLElement>) => {
-  // Look for child elements that are tinymce instances...
-  // This should only do something if the element was not a target element
-  // because we'd only expect the target element to contain HTML...
+/**
+ * Run a callback for each editor inside the subject elements.
+ * @param subject the jQuery element set to search.
+ * @param callback the callback to call for any editor found.
+ */
+const withEachContainedEditor = (
+  subject: JQuery<HTMLElement>,
+  callback: (ed: Editor, inside: HTMLElement, subject: JQuery<HTMLElement>) => void | false
+) => {
+  // Look for editors that are contained within the jQuery subjects
   subject.each((i, elem) => {
     for (const editor of getTinymce().get()) {
       if ($.contains(elem, editor.getContentAreaContainer())) {
-        editor.remove();
+        if (callback(editor, elem, subject) === false) {
+          return false;
+        }
       }
     }
+    return;
   });
 };
+
+/**
+ * Run a callback for any editor associated with the subject elements.
+ * @param subject the jQuery element set to search.
+ * @param callback the callback to call for any associated editor found.
+ */
+const withEachLinkedEditor = (
+  subject: JQuery<HTMLElement>,
+  callback: (ed: Editor, associated: HTMLElement, subject: JQuery<HTMLElement>) => void | false
+) => {
+  subject.each((_i, elm) => withTinymceInstance(elm, (ed) => callback(ed, elm, subject)));
+};
+
+/**
+ * Remove all editors associated with the element set.
+ * @param subject the jQuery element set to search.
+ */
+const removeTargetElementEditor = (subject: JQuery<HTMLElement>) => withEachLinkedEditor(subject, (ed) => ed.remove());
+
+/**
+ * Remove all editors inside the element set.
+ * @param subject the jQuery element set to search.
+ */
+const removeChildEditors = (subject: JQuery<HTMLElement>) => withEachContainedEditor(subject, (ed) => ed.remove());
 
 /**
  * Remove editors associated with the target elements in subject
@@ -49,7 +78,6 @@ type JQueryAttrParams = [name: string] | [attributes: Record<string, JQueryAttrV
  */
 const patchJqAttr = (origAttrFn: JQueryAttrFn): JQueryAttrFn =>
   function (this: JQuery<HTMLElement>, ...args: JQueryAttrParams): string | undefined | JQuery<HTMLElement> {
-
     // Helper to set the value attribute or TinyMCE's content
     const setValue = (valueOrProducer: JQueryAttrValueOrProducer) => {
       if (valueOrProducer === undefined) {
@@ -277,6 +305,8 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
       // that when no item is present jQuery returns `undefined`.
       return undefined;
     } else { // set the HTML value
+      // type of the setter function, annoying typescript 4.5 can't seem to infer this...
+      type HtmlSetterType = (htmlString_function: JQueryHtmlValue | JQueryHtmlProducer) => JQuery<HTMLElement>;
       // first we need to remove any editors we would overwrite
       removeChildEditors(this);
       // for all the nodes
@@ -293,25 +323,30 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
             typeof htmlOrNode === 'string'
               ? htmlOrNode
               : (() => {
-                // if the node might have an editor remove it first.
-                // TODO consider if we should copy the editor content instead?
                 if (SandHTMLElement.isPrototypeOf(htmlOrNode)) {
+                  // if the node might have an editor remove it first.
+                  // TODO consider if we should copy the editor content instead?
                   removeEditors($(htmlOrNode));
                 }
-                // wrap the node in a div so we can get the outerHTML
-                const n = $(htmlOrNode).wrapAll('<div></div>').parent();
-                const out = origFn.call(n);
-                // normally the node would be shifted from the original location
-                // so we simulate that by removing it.
-                n.remove();
-                return out;
+                // to get consistency let jQuery do the move and then use the content
+                // also if jQuery handles things not listed in the types this should
+                // hopefully allow us to work gracefully...
+                const elem = document.createElement('div');
+                (origFn as HtmlSetterType).call($(elem), htmlOrNode);
+                return elem.innerHTML;
               })()
           );
           // finally update the editor with the html
           ed.setContent(html);
         }, (elm) => {
-          // work around bad type inference
-          (origFn as Function).call($(elm), htmlOrNodeOrProducer);
+          if (typeof htmlOrNodeOrProducer === 'function') {
+            // these steps are so the correct index is passed to the producer fn
+            const origValue = origFn.call($(el));
+            const newValue = htmlOrNodeOrProducer.call(el, i, origValue);
+            (origFn as HtmlSetterType).call($(el), newValue);
+          } else {
+            (origFn as HtmlSetterType).call($(elm), htmlOrNodeOrProducer);
+          }
         });
       });
       return this;
