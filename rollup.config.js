@@ -1,9 +1,10 @@
 const swag = require('@ephox/swag');
+import { uglify } from 'rollup-plugin-uglify';
 
-export default {
+const build = (minify) => ({
   input: 'lib/main/ts/Main.js',
   output: {
-    file: 'dist/index.js',
+    file: 'dist/tinymce-jquery' + (minify ? '.min' : '') + '.js',
     format: 'iife'
   },
   treeshake: true,
@@ -13,6 +14,9 @@ export default {
       basedir: __dirname,
       prefixes: {}
     }),
-    swag.remapImports()
+    swag.remapImports(),
+    ...(minify ? [uglify()] : [])
   ]
-};
+});
+
+export default [build(false), build(true)];
