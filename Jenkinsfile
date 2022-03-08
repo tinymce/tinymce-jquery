@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@v4.1.0') _
+@Library('waluigi@v5.0.0') _
 
 standardProperties()
 
