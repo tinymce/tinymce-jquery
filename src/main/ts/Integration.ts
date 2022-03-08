@@ -1,9 +1,9 @@
-import { Editor, RawEditorSettings, TinyMCE as TinyMCEGlobal } from 'tinymce';
+import { Editor, RawEditorOptions, TinyMCE as TinyMCEGlobal } from 'tinymce';
 import { getJquery } from './JQuery';
 import { patchJQueryFunctions } from './Patch';
 import { loadTinymce, getTinymceInstance } from './TinyMCE';
 
-export interface RawEditorExtendedSettings extends RawEditorSettings {
+export interface RawEditorExtendedSettings extends RawEditorOptions {
   script_url?: string;
   channel?: string;
   api_key?: string;
