@@ -9,6 +9,10 @@
     "CHANGELOG.md",
     "LICENSE.txt"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "clean": "rimraf lib list",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
