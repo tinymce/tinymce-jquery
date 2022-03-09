@@ -1,8 +1,14 @@
 {
-  "name": "tinymce-jquery",
-  "version": "1.0.1-rc",
+  "name": "@tinymce/tinymce-jquery",
+  "version": "1.0.0-rc",
   "description": "Official TinyMCE integration for jQuery",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE.txt"
+  ],
   "scripts": {
     "clean": "rimraf lib list",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
@@ -40,6 +46,7 @@
     "react-dom": "^17.0.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.68.0",
+    "rollup-plugin-uglify": "^6.0.4",
     "tinymce": "^6.0.0",
     "ts-loader": "^9.2.6",
     "tslib": "^2.3.1",
@@ -47,6 +54,5 @@
     "webpack": "^5.69.1"
   },
   "dependencies": {
-    "rollup-plugin-uglify": "^6.0.4"
   }
 }
