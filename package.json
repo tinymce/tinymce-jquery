@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/tinymce-jquery",
-  "version": "1.0.1",
+  "version": "1.0.2-rc",
   "description": "Official TinyMCE integration for jQuery",
   "main": "dist/index.js",
   "files": [
