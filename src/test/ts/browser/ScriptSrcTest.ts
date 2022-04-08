@@ -7,7 +7,7 @@ UnitTest.test('ScriptSrcTest', () => {
   const aKey = 'abcdef0123456789';
   const aChannel = '5.4.2';
   Assertions.assertEq('Test empty settings',
-    'https://cdn.tiny.cloud/1/no-api-key/tinymce/5-stable/tinymce.min.js',
+    'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js',
     getScriptSrc({}));
 
   Assertions.assertEq('Test "script_url"',
@@ -18,7 +18,7 @@ UnitTest.test('ScriptSrcTest', () => {
     getScriptSrc({ channel: aChannel }));
 
   Assertions.assertEq('Test "api_key"',
-    'https://cdn.tiny.cloud/1/abcdef0123456789/tinymce/5-stable/tinymce.min.js',
+    'https://cdn.tiny.cloud/1/abcdef0123456789/tinymce/6/tinymce.min.js',
     getScriptSrc({ api_key: aKey }));
 
   Assertions.assertEq('Test "api_key" and "channel"',

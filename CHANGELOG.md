@@ -6,11 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 1.0.1
+## 2.0.0 - 2022-04-08
+### Changed
+- Set default cloudChannel to 6
+- Updated dependencies
+
+## 1.0.1 - 2022-03-15
 ### Fixed
 - Set release version in changelog.
 
-## 1.0.0
+## 1.0.0 - 2022-03-15
 ### Added
 - Initial release of the TinyMCE jQuery integration as a separate node module.
 

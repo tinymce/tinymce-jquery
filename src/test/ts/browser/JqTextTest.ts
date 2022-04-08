@@ -48,7 +48,7 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of TinyMCE', async () => {
       await createEditor((elm, ed) => {
         elm.text('Hello\nWorld');
-        Assertions.assertEq('Expected matching HTML', '<p>Hello<br />World</p>', ed.getContent());
+        Assertions.assertHtmlStructure('Expected matching HTML', '<p>Hello<br />World</p>', ed.getContent());
       });
     });
     it('sets the content of multiple things simultaneously', async () => {
@@ -138,7 +138,7 @@ describe('Check jQuery\'s `.text()` function', () => {
           Assertions.assertEq('Expected matching previous content', 'Previous\n\ncontent', prevValue);
           return 'Hello\nworld';
         });
-        Assertions.assertEq('Expected matching HTML', '<p>Hello<br />world</p>', ed.getContent());
+        Assertions.assertHtmlStructure('Expected matching HTML', '<p>Hello<br />world</p>', ed.getContent());
       });
     });
     it('sets the content of multiple things simultaneously', async () => {

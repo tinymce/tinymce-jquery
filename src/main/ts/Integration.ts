@@ -26,7 +26,7 @@ export const getScriptSrc = (settings: RawEditorExtendedSettings): string => {
   if (typeof settings.script_url === 'string') {
     return settings.script_url;
   } else {
-    const channel = typeof settings.channel === 'string' ? settings.channel : '5-stable';
+    const channel = typeof settings.channel === 'string' ? settings.channel : '6';
     const apiKey = typeof settings.api_key === 'string' ? settings.api_key : 'no-api-key';
     return `https://cdn.tiny.cloud/1/${apiKey}/tinymce/${channel}/tinymce.min.js`;
   }
