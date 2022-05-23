@@ -2,7 +2,7 @@
   "name": "@tinymce/tinymce-jquery",
   "version": "2.0.1-rc",
   "description": "Official TinyMCE integration for jQuery",
-  "main": "dist/index.js",
+  "main": "dist/tinymce-jquery.js",
   "files": [
     "dist",
     "README.md",
