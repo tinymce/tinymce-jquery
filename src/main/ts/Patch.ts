@@ -248,7 +248,8 @@ type JQueryHtmlProducer = (this: HTMLElement, index: number, oldhtml: string) =>
  */
 const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
   function (this: JQuery<HTMLElement>, htmlOrNodeOrProducer?: JQueryHtmlValue | JQueryHtmlProducer): string | JQuery<HTMLElement> | undefined {
-    if (htmlOrNodeOrProducer === undefined) { // get the HTML value
+    // behave like original jQuery if argument is omitted
+    if (arguments.length === 0) { // get the HTML value
       if (this.length >= 1) {
         // when more than one item exists the value of the first one is retrieved
         return withTinymceInstance(this[0], (ed) => ed.getContent(), (el) => origFn.call($(el)));
@@ -284,7 +285,7 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
                 // also if jQuery handles things not listed in the types this should
                 // hopefully allow us to work gracefully...
                 const elem = document.createElement('div');
-                (origFn as HtmlSetterType).call($(elem), htmlOrNode);
+                (origFn as HtmlSetterType).call($(elem), htmlOrNode ?? '');
                 return elem.innerHTML;
               })()
           );
@@ -297,7 +298,7 @@ const patchJqHtml = (origFn: JQueryHtmlFn): JQueryHtmlFn =>
             const newValue = htmlOrNodeOrProducer.call(el, i, origValue);
             (origFn as HtmlSetterType).call($(el), newValue);
           } else {
-            (origFn as HtmlSetterType).call($(elm), htmlOrNodeOrProducer);
+            (origFn as HtmlSetterType).call($(elm), htmlOrNodeOrProducer ?? '');
           }
         });
       });
@@ -318,7 +319,8 @@ type JQueryTextProducer = (this: HTMLElement, index: number, text: string) => JQ
  */
 const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
   function (this: JQuery<HTMLElement>, valueOrProducer?: JQueryTextValue | JQueryTextProducer): string | JQuery<HTMLElement> {
-    if (valueOrProducer === undefined) { // get text value
+    // behave like original jQuery if argument is omitted
+    if (arguments.length === 0) { // get text value
       // get the concatenated text value of all elements in the set
       // (which is different to HTML which just gets the first)
       // when no elements in the set it returns empty string
@@ -352,7 +354,7 @@ const patchJqText = (origFn: JQueryTextFn): JQueryTextFn =>
             const newValue = valueOrProducer.call(el, i, origValue);
             (origFn as TextSetterType).call($(el), newValue);
           } else {
-            (origFn as TextSetterType).call($(elm), valueOrProducer);
+            (origFn as TextSetterType).call($(elm), valueOrProducer ?? '');
           }
         });
       });
@@ -373,7 +375,8 @@ type JQueryValProducer = (this: HTMLElement, index: number, value: JQueryValValu
  */
 const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
   function (this: JQuery<HTMLElement>, valueOrProducer?: JQueryValValue | JQueryValProducer): JQueryValValue | undefined | JQuery<HTMLElement> {
-    if (valueOrProducer === undefined) {
+    // behave like original jQuery if argument is omitted
+    if (arguments.length === 0) {
       if (this.length >= 1) {
         return withTinymceInstance(this[0], (ed) => ed.getContent(), (elm) => origFn.call($(elm)));
       }
@@ -383,7 +386,7 @@ const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
       type ValSetterType = (valueOrProducer: JQueryValValue | JQueryValProducer) => JQuery<HTMLElement>;
       this.each((i, el) => {
         withTinymceInstance(el, (ed) => {
-          const val = Type.isFunction(valueOrProducer) ? valueOrProducer.call(el, i, ed.getContent()) : valueOrProducer;
+          const val = Type.isFunction(valueOrProducer) ? valueOrProducer.call(el, i, ed.getContent()) : valueOrProducer ?? '';
           // We don't expect to be given arrays/numbers but it's in the type...
           const html = Type.isArray(val) ? val.join('') : `${val}`;
           ed.setContent(html);
@@ -395,7 +398,7 @@ const patchJqVal = (origFn: JQueryValFn): JQueryValFn =>
             const newValue = valueOrProducer.call(el, i, origValue ?? '');
             (origFn as ValSetterType).call($(el), newValue);
           } else {
-            (origFn as ValSetterType).call($(elm), valueOrProducer);
+            (origFn as ValSetterType).call($(elm), valueOrProducer ?? '');
           }
         });
       });
