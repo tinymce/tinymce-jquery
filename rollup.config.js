@@ -1,5 +1,5 @@
 const swag = require('@ephox/swag');
-import { uglify } from 'rollup-plugin-uglify';
+const { uglify } = require('rollup-plugin-uglify');
 
 const build = (minify) => ({
   input: 'lib/main/ts/Main.js',
@@ -19,4 +19,4 @@ const build = (minify) => ({
   ]
 });
 
-export default [build(false), build(true)];
+module.exports = [build(false), build(true)];
