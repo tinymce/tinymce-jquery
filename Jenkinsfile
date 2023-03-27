@@ -4,9 +4,9 @@
 beehiveFlowBuild(
   container: [
     tag: '18',
-    resourceRequestMemory: '2Gi',
+    resourceRequestMemory: '3Gi',
     resourceLimitCpu: '4',
-    resourceLimitMemory: '2Gi'
+    resourceLimitMemory: '3Gi'
   ],
   test: {
     bedrockBrowsers(testDirs: [ "src/test/ts/browser" ])
