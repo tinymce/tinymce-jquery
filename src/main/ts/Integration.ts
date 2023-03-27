@@ -35,7 +35,10 @@ export const getScriptSrc = (settings: RawEditorExtendedSettings): string => {
 const getEditors = (tinymce: TinyMCEGlobal, self: JQuery<HTMLElement>): Editor[] => {
   const out: Editor[] = [];
   self.each((i, ele) => {
-    out.push(tinymce.get(ele.id));
+    const ed = tinymce.get(ele.id);
+    if (ed != null) {
+      out.push(ed);
+    }
   });
   return out;
 };

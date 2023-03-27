@@ -1,5 +1,5 @@
 const swag = require('@ephox/swag');
-import { uglify } from 'rollup-plugin-uglify';
+const terser = require('@rollup/plugin-terser');
 
 const build = (minify) => ({
   input: 'lib/main/ts/Main.js',
@@ -15,8 +15,8 @@ const build = (minify) => ({
       prefixes: {}
     }),
     swag.remapImports(),
-    ...(minify ? [uglify()] : [])
+    ...(minify ? [terser()] : [])
   ]
 });
 
-export default [build(false), build(true)];
+module.exports = [build(false), build(true)];

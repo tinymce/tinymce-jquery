@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   });
 
   suite.test('Get contents using jQuery', () => {
-    getTinymce().get('elm1').setContent('<p>Editor 1</p>');
+    getTinymce().get('elm1')?.setContent('<p>Editor 1</p>');
 
     LegacyUnit.equal($('#elm1').html(), '<p>Editor 1</p>');
     LegacyUnit.equal($('#elm1').val(), '<p>Editor 1</p>');
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   });
 
   suite.test('append/prepend contents using jQuery', () => {
-    getTinymce().get('elm1').setContent('<p>Editor 1</p>');
+    getTinymce().get('elm1')?.setContent('<p>Editor 1</p>');
 
     $('#elm1').append('<p>Test 1</p>');
     LegacyUnit.equal($('#elm1').html(), '<p>Editor 1</p>\n<p>Test 1</p>');
