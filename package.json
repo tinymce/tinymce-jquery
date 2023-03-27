@@ -20,7 +20,8 @@
     "build": "yarn run clean && tsc -p ./tsconfig.json && rollup -c rollup.config.js",
     "lint": "eslint src",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "yarn storybook-to-ghpages --source-branch=main"
   },
   "repository": "https://github.com/tinymce/tinymce-jquery",
   "author": "Tiny Technologies",
@@ -43,6 +44,7 @@
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/html": "^6.5.16",
     "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/storybook-deployer": "^2.8.16",
     "@storybook/testing-library": "^0.0.13",
     "@tinymce/beehive-flow": "^0.19.0",
     "@tinymce/eslint-plugin": "^2.2.1",
