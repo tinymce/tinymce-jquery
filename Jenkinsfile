@@ -2,6 +2,12 @@
 @Library('waluigi@release/7') _
 
 beehiveFlowBuild(
+  container: [
+    tag: '18',
+    resourceRequestMemory: '2Gi',
+    resourceLimitCpu: '4',
+    resourceLimitMemory: '2Gi'
+  ],
   test: {
     bedrockBrowsers(testDirs: [ "src/test/ts/browser" ])
   },
