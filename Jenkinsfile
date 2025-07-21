@@ -1,16 +1,14 @@
 #!groovy
 @Library('waluigi@release/7') _
 
-beehiveFlowBuild(
-  container: [
-    tag: '18',
-    resourceRequestMemory: '3Gi',
-    resourceLimitCpu: '4',
-    resourceLimitMemory: '3Gi'
+mixedBeehiveFlow(
+  container: [ resourceRequestMemory: '3Gi', resourceLimitMemory: '3Gi' ],
+  testPrefix: 'Tiny-jQuery',
+  platforms: [
+    [ browser: 'chrome', headless: true ],
+    [ browser: 'firefox', provider: 'aws', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
   ],
-  test: {
-    bedrockBrowsers(testDirs: [ "src/test/ts/browser" ])
-  },
   customSteps: {
     stage("update storybook") {
       def status = beehiveFlowStatus()
@@ -22,5 +20,9 @@ beehiveFlowBuild(
         echo "Skipping as is not latest release"
       }
     }
+  },
+  preparePublish:{
+    yarnInstall()
+    sh "yarn build"
   }
 )
