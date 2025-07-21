@@ -12,7 +12,7 @@ instead be distributed as an independent npm package.
 * If you need detailed documentation on TinyMCE, see:
 [TinyMCE Documentation](https://www.tiny.cloud/docs/).
 * For the TinyMCE jQuery Quick Start, see:
-[TinyMCE Documentation - jQuery Integration](https://www.tiny.cloud/docs/integrations/jquery/).
+[TinyMCE Documentation - jQuery Integration](https://www.tiny.cloud/docs/tinymce/latest/jquery-cloud/).
 * For our quick demos, check out the TinyMCE jQuery
 [Storybook](https://tinymce.github.io/tinymce-jquery/).
 
