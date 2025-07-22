@@ -1202,10 +1202,25 @@
     "@ephox/bedrock-common" "^13.0.0"
     "@ephox/dispute" "^1.0.3"
 
+"@ephox/bedrock-client@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-client/-/bedrock-client-15.0.0.tgz#a2ae8ec5be2b1ff7a4843c32da4879590514d0ed"
+  integrity sha512-jO1REPlAokzLScK4m9Wcykw6SC5+Bv9pBk3LAjEvNgfxydSlgl2ReYTSsL0ZvQRJguzzpE1T7XD3kOfvtRX0FQ==
+  dependencies:
+    "@ephox/bedrock-common" "^15.0.0"
+    "@ephox/dispute" "^1.0.3"
+
 "@ephox/bedrock-common@11 || 12 || 13", "@ephox/bedrock-common@^13.0.0":
   version "13.0.0"
   resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-13.0.0.tgz#e30d1710552de980b265b812dde879ff8875c359"
   integrity sha512-aJ3gtezZ0duGJAniT/+uWi0fFCJRqNdJjumxhCwOVTc2MSsXcyqn70s6FIlrp/Fw2QuyiEqxgormgrmBUbWNWA==
+  dependencies:
+    diff "^5.0.0"
+
+"@ephox/bedrock-common@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-15.0.0.tgz#988020addd4c11922e906dfef26547ec72384797"
+  integrity sha512-uGR1Oaksv9d9gDEJra2HB/HUCAdcBTiBfKYWEVvu7XofU4lHpoUFlX+7bnDi9h6N0CZ67bEAeqWhTwrN/2dFKw==
   dependencies:
     diff "^5.0.0"
 

@@ -29,7 +29,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@ephox/agar": "^7.4.1",
-    "@ephox/bedrock-client": "^13.0.0",
+    "@ephox/bedrock-client": "^15.0.0",
     "@ephox/bedrock-server": "^13.3.0",
     "@ephox/katamari": "^9.1.5",
     "@ephox/mcagar": "^8.3.2",
