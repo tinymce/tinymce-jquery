@@ -1,5 +1,5 @@
 import { setupIntegration, RawEditorExtendedSettings } from '../main/ts/Integration';
-import { Story, Meta } from '@storybook/html';
+import { StoryFn } from '@storybook/html';
 
 setupIntegration();
 
@@ -7,13 +7,11 @@ setupIntegration();
 export default {
   title: 'TinyMCE Editor',
   // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
-  argTypes: {
-  },
-} as Meta;
+};
 
 let count = 0;
 // More on component templates: https://storybook.js.org/docs/html/writing-stories/introduction#using-args
-const Template: Story<RawEditorExtendedSettings> = (args) => {
+const Template: StoryFn<RawEditorExtendedSettings> = (args) => {
   const mount = `${count++}`;
 
   const mountNode = document.createElement('div');

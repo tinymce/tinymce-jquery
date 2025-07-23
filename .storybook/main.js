@@ -1,16 +1,11 @@
 module.exports = {
   "stories": [
-    "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
   ],
-  "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions"
-  ],
-  "framework": "@storybook/html",
+  "addons": ["@storybook/addon-webpack5-compiler-babel"],
+  "framework": "@storybook/html-webpack5",
   "core": {
-    "builder": "@storybook/builder-webpack5"
+    "builder": { name: "@storybook/builder-webpack5" }
   },
   "webpackFinal": async (config, { configType }) => {
     // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
