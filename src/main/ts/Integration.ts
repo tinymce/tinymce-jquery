@@ -128,8 +128,10 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
           selector: undefined,
           target: elm,
           init_instance_callback: initInstanceCallback
+        }).catch((err) => {
+          /* eslint-disable-next-line no-console */
+          console.error('TinyMCE init failed', err);
         });
-
       }); // this.each
 
       if (initCount === this.length) {

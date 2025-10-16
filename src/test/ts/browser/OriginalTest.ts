@@ -33,6 +33,9 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
             done();
           }
         }
+      }).catch((err) => {
+        /* eslint-disable-next-line no-console */
+        console.error('TinyMCE init failed', err);
       });
     });
   });
@@ -95,12 +98,18 @@ UnitTest.asynctest('browser.tinymce.core.JqueryIntegrationTest', (success, failu
   suite.test('applyPatch is only called once', () => {
     const options = {};
 
-    $('#elm1').tinymce(options);
+    $('#elm1').tinymce(options).catch((err) => {
+      /* eslint-disable-next-line no-console */
+      console.error('TinyMCE init failed', err);
+    });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const oldValFn = $.fn.val;
 
-    $('#elm2').tinymce(options);
+    $('#elm2').tinymce(options).catch((err) => {
+      /* eslint-disable-next-line no-console */
+      console.error('TinyMCE init failed', err);
+    });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
     LegacyUnit.equal($.fn.val, oldValFn);

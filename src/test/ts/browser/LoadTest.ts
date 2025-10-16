@@ -28,6 +28,9 @@ UnitTest.asynctest('LoadTest', (success, failure) => {
           editorInstance = editor;
           seenInit.set(true);
         }
+      }).catch((err) => {
+        /* eslint-disable-next-line no-console */
+        console.error('TinyMCE init failed', err);
       });
     }),
     Waiter.sTryUntilPredicate('Waiting for editor setup', () => seenSetup.get()),
