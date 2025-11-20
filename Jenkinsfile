@@ -2,7 +2,14 @@
 @Library('waluigi@release/7') _
 
 mixedBeehiveFlow(
-  container: [ resourceRequestMemory: '3Gi', resourceLimitMemory: '3Gi' ],
+  container: [
+    resourceRequestMemory: '3Gi',
+    resourceLimitMemory: '3Gi'
+  ],
+  publishContainer: [
+    resourceRequestMemory: '6Gi',
+    resourceLimitMemory: '6Gi'
+  ],
   testPrefix: 'Tiny-jQuery',
   platforms: [
     [ browser: 'chrome', headless: true ],
