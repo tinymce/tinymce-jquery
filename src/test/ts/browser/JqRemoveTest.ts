@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @tinymce/prefer-fun */
+
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';

@@ -20,7 +20,10 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
 
   const addTinyMCE = () => {
     $(mountNode).after(`<div id="tiny${mount}"><p>The quick brown fox jumps over the lazy dog.</p></div>`);
-    $(`div#tiny${mount}`).tinymce(args);
+    $(`div#tiny${mount}`).tinymce(args).catch((err) => {
+      /* eslint-disable-next-line no-console */
+      console.error('TinyMCE init failed', err);
+    });
   };
 
   const removeTinyMCE = () => {
