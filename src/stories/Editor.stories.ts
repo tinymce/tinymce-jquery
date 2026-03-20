@@ -1,5 +1,6 @@
 import { setupIntegration, RawEditorExtendedSettings } from '../main/ts/Integration';
 import { Story, Meta } from '@storybook/html';
+import { generateConfig } from './configs/config';
 
 setupIntegration();
 
@@ -15,7 +16,7 @@ let count = 0;
 // More on component templates: https://storybook.js.org/docs/html/writing-stories/introduction#using-args
 const Template: Story<RawEditorExtendedSettings> = (args) => {
   const mount = `${count++}`;
-
+  console.log('arge ', {args})
   const mountNode = document.createElement('div');
 
   const addTinyMCE = () => {
@@ -52,14 +53,20 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
   // when we see this node in the document we'll create tinymce, when it's removed we'll remove tinymce
   return mountNode;
 };
-
-export const IframeEditor = Template.bind({});
+const fullEditorConfig = generateConfig({
+  excludePlugins: ['tinydrive', 'uploadcare']
+});
+export const IframeEditor = Template.bind({
+  
+});
 // More on args: https://storybook.js.org/docs/html/writing-stories/args
 IframeEditor.args = {
   inline: false,
+  ...fullEditorConfig
 };
 
 export const InlineEditor = Template.bind({});
 InlineEditor.args = {
   inline: true,
+  ...fullEditorConfig
 };

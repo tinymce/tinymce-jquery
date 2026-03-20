@@ -48,6 +48,8 @@ let lazyLoading = LoadStatus.NOT_LOADING;
 const callbacks: TinymceCallback[] = [];
 
 export const loadTinymce = (url: string, callback: TinymceCallback) => {
+    debugger;
+
   // Load TinyMCE on demand, if we need to
   if (!hasTinymce() && lazyLoading === LoadStatus.NOT_LOADING) {
     lazyLoading = LoadStatus.LOADING_STARTED;

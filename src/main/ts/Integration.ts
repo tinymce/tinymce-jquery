@@ -73,8 +73,10 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
   this.css('visibility', 'hidden');
 
   return new Promise<Editor[]>((resolve) => {
+    console.log('settings', getScriptSrc(settings))
     // Load tinymce
     loadTinymce(getScriptSrc(settings), (tinymce, loadedFromProvidedUrl) => {
+      console.log('major version ', tinymce);
       // Execute callback after tinymce has been loaded and before the initialization occurs
       if (loadedFromProvidedUrl && settings.script_loaded) {
         settings.script_loaded();
@@ -143,6 +145,7 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
 };
 
 export const setupIntegration = () => {
+  debugger;
   const jq = getJquery();
   // Add :tinymce pseudo selector this will select elements that has been converted into editor instances
   // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
