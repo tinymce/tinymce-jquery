@@ -1,5 +1,5 @@
 import { setupIntegration, RawEditorExtendedSettings } from '../main/ts/Integration';
-import { Story, Meta } from '@storybook/html';
+import { StoryFn, Meta } from '@storybook/html';
 
 setupIntegration();
 
@@ -13,7 +13,7 @@ export default {
 
 let count = 0;
 // More on component templates: https://storybook.js.org/docs/html/writing-stories/introduction#using-args
-const Template: Story<RawEditorExtendedSettings> = (args) => {
+const Template: StoryFn<RawEditorExtendedSettings> = (args) => {
   const mount = `${count++}`;
 
   const mountNode = document.createElement('div');
