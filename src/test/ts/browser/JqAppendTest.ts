@@ -1,24 +1,35 @@
 
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, createHTML } from '../Utils';
+import { Arr } from '@ephox/katamari';
+import { Remove, SelectorFilter } from '@ephox/sugar';
 
-setupIntegration();
 
 describe('Check jQuery\'s `.append()` function', () => {
+
+  before(setupIntegration);
+
+   after(() => {
+    $('*:tinymce').remove();
+    Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
+  });
+  
   context('Append a string', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');
       $(div).append('<p>Hello world</p>');
       Assertions.assertEq('Expected content to match the appended content.', `<p>Hello world</p>`, div.innerHTML);
     });
+    
     it('check that appending to an empty editor works', async () => {
       await createEditor((elm, ed) => {
         $(elm).append(`<p>Hello world</p>`);
         Assertions.assertEq('Expected editor content to match the appended content.', `<p>Hello world</p>`, ed.getContent());
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>Original content</p>');
@@ -31,18 +42,21 @@ describe('Check jQuery\'s `.append()` function', () => {
       });
     });
   });
+
   context('Append a list of string', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');
       $(div).append('<p>Hello</p>', '<p>', '<p>world</p>');
       Assertions.assertEq('Expected content to match the appended content.', `<p>Hello</p><p></p><p>world</p>`, div.innerHTML);
     });
+
     it('check that appending to an empty editor works', async () => {
       await createEditor((elm, ed) => {
         $(elm).append('<p>Hello</p>', '<p>', '<p>world</p>');
         Assertions.assertEq('Expected editor content to match the appended content.', `<p>Hello</p>\n<p>&nbsp;</p>\n<p>world</p>`, ed.getContent());
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>Original content</p>');
@@ -63,6 +77,7 @@ describe('Check jQuery\'s `.append()` function', () => {
       $(div).append(p);
       Assertions.assertEq('Expected content to match the appended content.', `<p>Hello world</p>`, div.innerHTML);
     });
+
     it('check that appending to an empty editor works', async () => {
       await createEditor((elm, ed) => {
         const p = document.createElement('p');
@@ -71,6 +86,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         Assertions.assertEq('Expected editor content to match the appended content.', `<p>Hello world</p>`, ed.getContent());
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>Original content</p>');
@@ -85,6 +101,7 @@ describe('Check jQuery\'s `.append()` function', () => {
       });
     });
   });
+
   context('Append a list of node', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');
@@ -96,6 +113,7 @@ describe('Check jQuery\'s `.append()` function', () => {
       $(div).append(p1, p2, p3);
       Assertions.assertEq('Expected content to match the appended content.', `<p>Hello</p><p></p><p>world</p>`, div.innerHTML);
     });
+
     it('check that appending to an empty editor works', async () => {
       await createEditor((elm, ed) => {
         const p1 = document.createElement('p');
@@ -107,6 +125,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         Assertions.assertEq('Expected editor content to match the appended content.', `<p>Hello</p>\n<p>&nbsp;</p>\n<p>world</p>`, ed.getContent());
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>Original content</p>');
@@ -124,6 +143,7 @@ describe('Check jQuery\'s `.append()` function', () => {
       });
     });
   });
+
   context('Append a jquery node set', () => {
     it('check that appending to a div works', async () => {
       await createHTML(`<section><p class="move">One</p><p>Two</p><p class="move">Three</p></section>`, (root) => {
@@ -134,6 +154,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         Assertions.assertEq('Expected the nodes to have been removed from the root', `<p>Two</p>`, root.innerHTML);
       });
     });
+
     it('check that appending to an empty editor works', async () => {
       await createEditor(async (elm, ed) => {
         await createHTML(`<section><p class="move">One</p><p>Two</p><p class="move">Three</p></section>`, (root) => {
@@ -144,6 +165,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         });
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor(async (elm, ed) => {
         await createHTML(`<section><p class="move">One</p><p>Two</p><p class="move">Three</p></section>`, (root) => {
@@ -157,6 +179,7 @@ describe('Check jQuery\'s `.append()` function', () => {
       });
     });
   });
+
   context('Append a list of jquery node set', () => {
     it('check that appending to a div works', async () => {
       // eslint-disable-next-line max-len
@@ -169,6 +192,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         Assertions.assertEq('Expected the nodes to have been removed from the root', `<p>Four</p>`, root.innerHTML);
       });
     });
+
     it('check that appending to an empty editor works', async () => {
       await createEditor(async (elm, ed) => {
         // eslint-disable-next-line max-len
@@ -181,6 +205,7 @@ describe('Check jQuery\'s `.append()` function', () => {
         });
       });
     });
+
     it('check that appending to an non-empty editor works', async () => {
       await createEditor(async (elm, ed) => {
         // eslint-disable-next-line max-len
