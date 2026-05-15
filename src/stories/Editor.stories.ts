@@ -1,5 +1,5 @@
 import { setupIntegration, RawEditorExtendedSettings } from '../main/ts/Integration';
-import { StoryFn, Meta } from '@storybook/html-vite';
+import { StoryFn, Meta } from '@storybook/html';
 
 setupIntegration();
 

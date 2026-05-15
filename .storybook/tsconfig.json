@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "target": "es6",
+    "module": "nodenext",
+     "lib": ["es2015", "dom"],
+     "types": ["jquery"]
+    },
+  "include": [
+    "../src/**/*",
+    "../.storybook/**/*"
+  ]
+}
