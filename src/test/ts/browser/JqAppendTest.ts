@@ -6,23 +6,22 @@ import { createEditor, createHTML } from '../Utils';
 import { Arr } from '@ephox/katamari';
 import { Remove, SelectorFilter } from '@ephox/sugar';
 
-
 describe('Check jQuery\'s `.append()` function', () => {
 
   before(setupIntegration);
 
-   after(() => {
+  after(() => {
     $('*:tinymce').remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
   });
-  
+
   context('Append a string', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');
       $(div).append('<p>Hello world</p>');
       Assertions.assertEq('Expected content to match the appended content.', `<p>Hello world</p>`, div.innerHTML);
     });
-    
+
     it('check that appending to an empty editor works', async () => {
       await createEditor((elm, ed) => {
         $(elm).append(`<p>Hello world</p>`);

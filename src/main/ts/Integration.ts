@@ -149,7 +149,7 @@ export const setupIntegration = () => {
   // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
   // Take advantage of jQuery's createPseudo API in v4 while still supports the older versions
   jq.expr.pseudos.tinymce = jq.expr.createPseudo ?
-    jq.expr.createPseudo(( text ) => ( elem ) => !!getTinymceInstance( elem ))
+    jq.expr.createPseudo(( _text ) => ( elem ) => !!getTinymceInstance( elem ))
     : (e: Element) => !!getTinymceInstance(e);
 
   // Add a tinymce function for creating editors
