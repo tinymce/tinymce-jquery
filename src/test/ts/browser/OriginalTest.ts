@@ -5,10 +5,10 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { setupIntegration } from '../../../main/ts/Integration';
 import { getTinymce } from '../../../main/ts/TinyMCE';
 
+setupIntegration();
+
 describe('JqueryIntegrationTest', () => {
   before(async () => {
-    setupIntegration();
-
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Html.set(ce,
