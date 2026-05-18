@@ -24,6 +24,3 @@ Open up an [issue](https://github.com/tinymce/tinymce-jquery/issues) and let us
 know or submit a [pull request](https://github.com/tinymce/tinymce-jquery/pulls).
 *Note: For issues concerning TinyMCE please visit the
 [TinyMCE repository](https://github.com/tinymce/tinymce).*
-
-
-## Compatibility
