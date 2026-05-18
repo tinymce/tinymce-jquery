@@ -1,20 +1,12 @@
 
 import { Assertions } from '@ephox/agar';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, createHTML } from '../Utils';
-import { Arr } from '@ephox/katamari';
-import { Remove, SelectorFilter } from '@ephox/sugar';
+
+setupIntegration();
 
 describe('Check jQuery\'s `.append()` function', () => {
-
-  before(setupIntegration);
-
-  after(() => {
-    $('*:tinymce').remove();
-    Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
-  });
-
   context('Append a string', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');
