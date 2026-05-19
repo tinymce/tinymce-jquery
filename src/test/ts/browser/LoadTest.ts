@@ -6,23 +6,26 @@ import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
 describe('LoadTest', () => {
-  // Note that bedrock uses jQuery so we don't need to load it
-  setupIntegration();
-
   let seenSetup = false;
   let editorInstance: Editor;
 
-  before(async () => {
+  before(async function () {
+    this.timeout(5000); // Allow more time for loading TinyMCE
+
+    // Note that bedrock uses jQuery so we don't need to load it
+    setupIntegration();
+
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Insert.append(SugarBody.body(), ce);
 
     await new Promise((resolve) => {
       $('div.test-editor').tinymce({
+        script_url: '/project/node_modules/tinymce/tinymce.js',
         init_instance_callback: (editor: Editor) => {
           seenSetup = true;
           editorInstance = editor;
-          setTimeout(resolve, 100);
+          resolve(editor);
         }
       }).catch((err) => {
         /* eslint-disable-next-line no-console */

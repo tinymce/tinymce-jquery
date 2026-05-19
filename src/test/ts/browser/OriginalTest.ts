@@ -5,34 +5,40 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 
-describe('OriginalTest', () => {
-  setupIntegration();
+const setup = () => {
+  // make an SugarElement for jQuery to target
+  const ce = SugarElement.fromTag('div');
+  Class.add(ce, 'test-editor');
+  Html.set(ce,
+    '<textarea id="elm1"></textarea>' +
+    '<textarea id="elm2"></textarea>' +
+    '<textarea id="elm3">Textarea</textarea>'
+  );
+  Insert.append(SugarBody.body(), ce);
+};
 
-  before(async () => {
-    // make an SugarElement for jQuery to target
-    const ce = SugarElement.fromTag('div');
-    Class.add(ce, 'test-editor');
-    Html.set(ce,
-      '<textarea id="elm1"></textarea>' +
-      '<textarea id="elm2"></textarea>' +
-      '<textarea id="elm3">Textarea</textarea>'
-    );
-    Insert.append(SugarBody.body(), ce);
+describe('OriginalTest', () => {
+  before(async function () {
+    this.timeout(5000); // Allow more time for loading TinyMCE
+
+    setupIntegration();
+    setup();
 
     await new Promise<void>((resolve) => {
       $('#elm1,#elm2').tinymce({
-        base_url: '/project/node_modules/tinymce',
-        script_url: '/project/node_modules/tinymce/tinymce.min.js',
+        script_url: '/project/node_modules/tinymce/tinymce.js',
         init_instance_callback: () => {
           const ed1 = getTinymce().get('elm1');
           const ed2 = getTinymce().get('elm2');
+
           if (ed1 && ed1.initialized && ed2 && ed2.initialized) {
-            resolve();
+            setTimeout(resolve, 100);
           }
         }
       }).catch((err) => {
         /* eslint-disable-next-line no-console */
         console.error('TinyMCE init failed', err);
+        resolve();
       });
     });
   });
