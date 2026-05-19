@@ -5,9 +5,10 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
-setupIntegration();
-
 describe('LoadTest', () => {
+  // Note that bedrock uses jQuery so we don't need to load it
+  setupIntegration();
+
   let seenSetup = false;
   let editorInstance: Editor;
 
@@ -18,13 +19,10 @@ describe('LoadTest', () => {
 
     await new Promise((resolve) => {
       $('div.test-editor').tinymce({
-        license_key: 'gpl',
-        setup: (editor: Editor) => {
+        init_instance_callback: (editor: Editor) => {
           seenSetup = true;
-          editor.on('SkinLoaded', () => {
-            editorInstance = editor;
-            setTimeout(resolve, 100);
-          });
+          editorInstance = editor;
+          setTimeout(resolve, 100);
         }
       }).catch((err) => {
         /* eslint-disable-next-line no-console */

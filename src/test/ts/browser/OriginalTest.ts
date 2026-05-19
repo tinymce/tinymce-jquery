@@ -2,13 +2,14 @@ import { Assertions } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
-import { setupIntegration } from '../../../main/ts/Integration';
 import { getTinymce } from '../../../main/ts/TinyMCE';
+import { setupIntegration } from 'src/main/ts/Integration';
 
-setupIntegration();
+describe('OriginalTest', () => {
+  setupIntegration();
 
-describe('JqueryIntegrationTest', () => {
   before(async () => {
+    // make an SugarElement for jQuery to target
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Html.set(ce,

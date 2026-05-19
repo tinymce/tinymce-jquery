@@ -4,9 +4,9 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor } from '../Utils';
 
-setupIntegration();
-
 describe('Check jQuery\'s `.val()` function', () => {
+  setupIntegration();
+
   context('passing no arguments to get the value', () => {
     it('gets the value of a input', () => {
       const input = document.createElement('input');
@@ -14,6 +14,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       input.value = 'Hello world';
       Assertions.assertEq('Expected value to match', 'Hello world', $(input).val());
     });
+
     it('gets the value of TinyMCE', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>The <strong>quick</strong> brown fox <em>jumps</em> over the lazy dog.</p>');
@@ -21,6 +22,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       });
     });
   });
+
   context('passing a string sets the value', () => {
     it('sets the value of an input', () => {
       const input = document.createElement('input');
@@ -35,6 +37,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       });
     });
   });
+
   context('passing a number sets the value', () => {
     it('sets the value of a progress', () => {
       const progress = document.createElement('progress');
@@ -42,6 +45,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       $(progress).val(63);
       Assertions.assertEq('Expected value to match', 63, progress.value);
     });
+
     it('sets the value of TinyMCE', async () => {
       await createEditor((elm, ed) => {
         elm.val(63);
@@ -49,6 +53,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       });
     });
   });
+
   context('passing a list of strings sets the value', () => {
     it('sets the value of a multi select', () => {
       const opt1 = document.createElement('option');
@@ -71,6 +76,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       Assertions.assertEq('Expected option 2 to not be selected', false, opt2.selected);
       Assertions.assertEq('Expected option 3 to be selected', true, opt3.selected);
     });
+
     it('sets the value of TinyMCE', async () => {
       await createEditor((elm, ed) => {
         elm.val([ '<p>one</p>', '<p>three</p>' ]);
@@ -78,6 +84,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       });
     });
   });
+
   context('passing a function that produces a string sets the value', () => {
     it('sets the value of an input', () => {
       const input = document.createElement('input');
@@ -91,6 +98,7 @@ describe('Check jQuery\'s `.val()` function', () => {
       });
       Assertions.assertEq('Expected value to match', 'Hello world', input.value);
     });
+
     it('sets the value of TinyMCE', async () => {
       await createEditor((elm, ed) => {
         ed.setContent('<p>previous value</p>');
