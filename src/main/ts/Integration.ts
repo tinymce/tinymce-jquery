@@ -124,7 +124,6 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
 
         // Create editor instance and render it
         tinymce.init({
-          license_key: 'gpl',
           ...settings,
           selector: undefined,
           target: elm,
