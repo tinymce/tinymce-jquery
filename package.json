@@ -55,6 +55,7 @@
   },
   "dependencies": {},
   "resolutions": {
-    "@types/node": "^16"
+    "@types/node": "^16",
+    "jquery": "^4.0.0"
   }
 }
