@@ -5,19 +5,19 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 
-const setup = () => {
-  // make an SugarElement for jQuery to target
-  const ce = SugarElement.fromTag('div');
-  Class.add(ce, 'test-editor');
-  Html.set(ce,
-    '<textarea id="elm1"></textarea>' +
-    '<textarea id="elm2"></textarea>' +
-    '<textarea id="elm3">Textarea</textarea>'
-  );
-  Insert.append(SugarBody.body(), ce);
-};
-
 describe('OriginalTest', () => {
+  const setup = () => {
+    // make an SugarElement for jQuery to target
+    const ce = SugarElement.fromTag('div');
+    Class.add(ce, 'test-editor');
+    Html.set(ce,
+      '<textarea id="elm1"></textarea>' +
+      '<textarea id="elm2"></textarea>' +
+      '<textarea id="elm3">Textarea</textarea>'
+    );
+    Insert.append(SugarBody.body(), ce);
+  };
+
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
 
@@ -26,6 +26,7 @@ describe('OriginalTest', () => {
 
     await new Promise<void>((resolve) => {
       $('#elm1,#elm2').tinymce({
+        license_key: 'gpl',
         script_url: '/project/node_modules/tinymce/tinymce.js',
         init_instance_callback: () => {
           const ed1 = getTinymce().get('elm1');

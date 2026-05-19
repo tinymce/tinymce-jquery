@@ -19,18 +19,19 @@ describe('LoadTest', () => {
     Class.add(ce, 'test-editor');
     Insert.append(SugarBody.body(), ce);
 
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       $('div.test-editor').tinymce({
+        license_key: 'gpl',
         script_url: '/project/node_modules/tinymce/tinymce.js',
         init_instance_callback: (editor: Editor) => {
           seenSetup = true;
           editorInstance = editor;
-          resolve(editor);
+          resolve();
         }
       }).catch((err) => {
         /* eslint-disable-next-line no-console */
         console.error('TinyMCE init failed', err);
-        resolve(undefined);
+        resolve();
       });
     });
   });
