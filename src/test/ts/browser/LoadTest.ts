@@ -5,13 +5,12 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
+
 describe('LoadTest', () => {
-  let seenSetup = false;
   let editorInstance: Editor;
 
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
-
     // Note that bedrock uses jQuery so we don't need to load it
     setupIntegration();
 
@@ -24,7 +23,6 @@ describe('LoadTest', () => {
         license_key: 'gpl',
         script_url: '/project/node_modules/tinymce/tinymce.js',
         init_instance_callback: (editor: Editor) => {
-          seenSetup = true;
           editorInstance = editor;
           resolve();
         }
@@ -39,10 +37,6 @@ describe('LoadTest', () => {
   after(() => {
     $('*:tinymce').remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
-  });
-
-  it('calls setup callback', () => {
-    Assertions.assertEq('setup was called', true, seenSetup);
   });
 
   it('can be retrieved from jQuery', () => {
