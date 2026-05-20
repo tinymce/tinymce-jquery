@@ -8,7 +8,10 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
   Insert.append(SugarBody.body(), ce);
   try {
     const targetElm = $(ce.dom);
-    const editors = await targetElm.tinymce({ });
+    const editors = await targetElm.tinymce({
+      license_key: 'gpl',
+      script_url: '/project/node_modules/tinymce/tinymce.js',
+    });
     try {
       const maybeAsync = action(targetElm, editors[0]);
       if (maybeAsync) {
