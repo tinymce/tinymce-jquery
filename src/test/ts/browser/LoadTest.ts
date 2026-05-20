@@ -5,7 +5,6 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
-
 describe('LoadTest', () => {
   let editorInstance: Editor;
 
