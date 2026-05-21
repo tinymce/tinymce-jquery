@@ -1,4 +1,4 @@
-import { Assertions } from '@ephox/agar';
+import { Assertions, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
@@ -28,19 +28,18 @@ describe('OriginalTest', () => {
       $('#elm1,#elm2').tinymce({
         license_key: 'gpl',
         script_url: '/project/node_modules/tinymce/tinymce.js',
-        init_instance_callback: () => {
-          const ed1 = getTinymce().get('elm1');
-          const ed2 = getTinymce().get('elm2');
-
-          if (ed1 && ed1.initialized && ed2 && ed2.initialized) {
-            setTimeout(resolve, 100);
-          }
-        }
+        init_instance_callback: () => resolve(),
       }).catch((err) => {
         /* eslint-disable-next-line no-console */
         console.error('TinyMCE init failed', err);
         resolve();
       });
+    });
+
+    await Waiter.pTryUntil('Editors should be initialized', () => {
+      const ed1 = getTinymce().get('elm1');
+      const ed2 = getTinymce().get('elm2');
+      return ed1?.initialized && ed2?.initialized;
     });
   });
 
