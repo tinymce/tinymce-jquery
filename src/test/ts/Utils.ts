@@ -20,7 +20,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
     await maybeAsync;
   }
   editors[0].remove();
-  await Waiter.pTryUntilPredicate('Editor should be removed', () => $(ce.dom).tinymce()?.initialized);
+  await Waiter.pTryUntil('Editor should be removed', () => $(ce.dom).tinymce() === undefined);
   Remove.remove(ce);
 };
 
