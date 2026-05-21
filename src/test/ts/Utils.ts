@@ -1,4 +1,5 @@
 
+import { Waiter } from '@ephox/agar';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 
@@ -20,6 +21,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
       }
     } finally {
       editors[0].remove();
+      await Waiter.pTryUntilPredicate('Editor should be removed', () => $(ce.dom).tinymce() === undefined);
     }
   } finally {
     Remove.remove(ce);
