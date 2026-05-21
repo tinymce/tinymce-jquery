@@ -5,7 +5,6 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 
-
 describe('OriginalTest', () => {
   setupIntegration();
 

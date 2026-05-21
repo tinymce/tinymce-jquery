@@ -8,22 +8,11 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
   Insert.append(SugarBody.body(), ce);
   try {
     const targetElm = $(ce.dom);
-    const editors = await new Promise<[Editor]>((resolve) => {
-      targetElm.tinymce({
-        license_key: 'gpl',
-        script_url: '/project/node_modules/tinymce/tinymce.js',
-        setup: (editor) => {
-          editor.on('SkinLoaded', () => {
-            // Resolve the promise once the editor is initialized
-            resolve([editor]);
-          });
-        }
-      }).catch((err) => {
-        /* eslint-disable-next-line no-console */
-        console.error('TinyMCE init failed', err);
-        resolve([undefined as unknown as Editor]);
-      });
+    const editors = await targetElm.tinymce({
+      license_key: 'gpl',
+      script_url: '/project/node_modules/tinymce/tinymce.js',
     });
+
     try {
       const maybeAsync = action(targetElm, editors[0]);
       if (maybeAsync) {
