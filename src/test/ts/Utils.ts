@@ -13,26 +13,27 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
     script_url: '/project/node_modules/tinymce/tinymce.js',
   });
 
-  await Waiter.pTryUntil('Editor should be initialized', () => editors[0].initialized);
+  await Waiter.pTryUntil('Editor should be initialized', () => editors[0]?.initialized);
 
   const maybeAsync = action(targetElm, editors[0]);
   if (maybeAsync) {
     await maybeAsync;
   }
   editors[0].remove();
-  await Waiter.pTryUntilPredicate('Editor should be removed', () => $(ce.dom).tinymce() === undefined);
+  await Waiter.pTryUntilPredicate('Editor should be removed', () => $(ce.dom).tinymce()?.initialized);
   Remove.remove(ce);
 };
 
 export const createHTML = async (html: string, action: (root: HTMLElement) => void | Promise<void>) => {
   const ce = SugarElement.fromHtml<HTMLElement>(html);
   Insert.append(SugarBody.body(), ce);
-  try {
-    const maybeAsync = action(ce.dom);
-    if (maybeAsync) {
-      await maybeAsync;
-    }
-  } finally {
-    Remove.remove(ce);
+
+  await Waiter.pTryUntil('Editor should be initialized', () => $(ce.dom)?.tinymce()?.initialized);
+
+  const maybeAsync = action(ce.dom);
+  if (maybeAsync) {
+    await maybeAsync;
   }
+
+  Remove.remove(ce);
 };
