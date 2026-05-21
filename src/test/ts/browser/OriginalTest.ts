@@ -5,7 +5,10 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 
+
 describe('OriginalTest', () => {
+  setupIntegration();
+
   const setup = () => {
     // make an SugarElement for jQuery to target
     const ce = SugarElement.fromTag('div');
@@ -20,20 +23,11 @@ describe('OriginalTest', () => {
 
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
-
-    setupIntegration();
     setup();
 
-    await new Promise<void>((resolve) => {
-      $('#elm1,#elm2').tinymce({
-        license_key: 'gpl',
-        script_url: '/project/node_modules/tinymce/tinymce.js',
-        init_instance_callback: () => resolve(),
-      }).catch((err) => {
-        /* eslint-disable-next-line no-console */
-        console.error('TinyMCE init failed', err);
-        resolve();
-      });
+    await $('#elm1,#elm2').tinymce({
+      license_key: 'gpl',
+      script_url: '/project/node_modules/tinymce/tinymce.js',
     });
 
     await Waiter.pTryUntil('Editors should be initialized', () => {
