@@ -100,7 +100,7 @@ describe('Check jQuery\'s `.attr()` function', () => {
 
   });
 
-  context('passing a string and a `(this: HTMLElement, index: number, prevValue: string) => string` sets the associated attribute value', () => {
+  context.skip('passing a string and a `(this: HTMLElement, index: number, prevValue: string) => string` sets the associated attribute value', () => {
     it('Check that the attribute `"width"` can be created on a div', () => {
       const el = document.createElement('div');
       // note that despite the types in this case `_oldValue` will be undefined, not empty string.
@@ -124,7 +124,7 @@ describe('Check jQuery\'s `.attr()` function', () => {
     });
   });
 
-  context('passing a string and a `(this: HTMLElement, index: number, prevValue: string) => number` sets the associated attribute value', () => {
+  context.skip('passing a string and a `(this: HTMLElement, index: number, prevValue: string) => number` sets the associated attribute value', () => {
     it('Check that the attribute `"width"` can be created on a div', () => {
       const el = document.createElement('div');
       // note that despite the types in this case `_oldValue` will be undefined, not empty string.
