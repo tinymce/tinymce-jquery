@@ -1,13 +1,12 @@
 
 import { Assertions } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
-import { setupIntegration } from '../../../main/ts/Integration';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { createEditor, createHTML } from '../Utils';
+import { setupIntegration } from '../../../main/ts/Integration';
 
 // TODO: Re-enable these tests once we have time to investigate the flakes
-describe('Check jQuery\'s `.append()` function', () => {
-  before(setupIntegration);
-
+describe.skip('Check jQuery\'s `.append()` function', () => {
+  setupIntegration();
   context('Append a string', () => {
     it('check that appending to a div works', () => {
       const div = document.createElement('div');

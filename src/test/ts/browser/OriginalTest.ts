@@ -5,9 +5,9 @@ import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } 
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 
-describe('OriginalTest', () => {
-  setupIntegration();
+setupIntegration();
 
+describe('OriginalTest', () => {
   const setup = () => {
     // make an SugarElement for jQuery to target
     const ce = SugarElement.fromTag('div');

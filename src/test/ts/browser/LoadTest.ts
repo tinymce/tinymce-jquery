@@ -5,14 +5,14 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 
+// Note that bedrock uses jQuery so we don't need to load it
+setupIntegration();
+
 describe('LoadTest', () => {
   let editorInstance: Editor;
 
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
-    // Note that bedrock uses jQuery so we don't need to load it
-    setupIntegration();
-
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Insert.append(SugarBody.body(), ce);

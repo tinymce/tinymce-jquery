@@ -4,9 +4,9 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor } from '../Utils';
 
-describe('Check jQuery\'s `.val()` function', () => {
-  setupIntegration();
+setupIntegration();
 
+describe('Check jQuery\'s `.val()` function', () => {
   context('passing no arguments to get the value', () => {
     it('gets the value of a input', () => {
       const input = document.createElement('input');
