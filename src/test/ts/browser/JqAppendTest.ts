@@ -174,16 +174,16 @@ describe.skip('Check jQuery\'s `.append()` function', () => {
 
   context('Append a list of jquery node set', () => {
     it('check that appending to a div works', async () => {
-      // eslint-disable-next-line max-len
+
       await createHTML(`<section><p class="move">One</p><p class="move2">Two</p><p class="move">Three</p><p>Four</p><p class="move2">Five</p></section>`,
-         (root) => {
-        const div = document.createElement('div');
-        const listOfSetOfP = [ $('p.move'), $('p.move2') ];
-        $(div).append(listOfSetOfP);
-        Assertions.assertEq('Expected content to match the appended content.',
-          `<p class="move">One</p><p class="move">Three</p><p class="move2">Two</p><p class="move2">Five</p>`, div.innerHTML);
-        Assertions.assertEq('Expected the nodes to have been removed from the root', `<p>Four</p>`, root.innerHTML);
-      });
+        (root) => {
+          const div = document.createElement('div');
+          const listOfSetOfP = [ $('p.move'), $('p.move2') ];
+          $(div).append(listOfSetOfP);
+          Assertions.assertEq('Expected content to match the appended content.',
+            `<p class="move">One</p><p class="move">Three</p><p class="move2">Two</p><p class="move2">Five</p>`, div.innerHTML);
+          Assertions.assertEq('Expected the nodes to have been removed from the root', `<p>Four</p>`, root.innerHTML);
+        });
     });
 
     it('check that appending to an empty editor works', async () => {
