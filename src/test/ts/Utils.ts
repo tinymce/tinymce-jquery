@@ -21,6 +21,10 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
     } finally {
       editors[0].remove();
     }
+  } catch (err) {
+    /* eslint-disable-next-line no-console */
+    console.error('Error creating editor', err);
+    console.trace();
   } finally {
     Remove.remove(ce);
   }
@@ -34,6 +38,10 @@ export const createHTML = async (html: string, action: (root: HTMLElement) => vo
     if (maybeAsync) {
       await maybeAsync;
     }
+  } catch (err) {
+    /* eslint-disable-next-line no-console */
+    console.error('Error creating HTML', err);
+    console.trace();
   } finally {
     Remove.remove(ce);
   }

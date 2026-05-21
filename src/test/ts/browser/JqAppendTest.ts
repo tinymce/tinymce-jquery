@@ -5,7 +5,7 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, createHTML } from '../Utils';
 
 // TODO: Re-enable these tests once we have time to investigate the flakes
-describe.skip('Check jQuery\'s `.append()` function', () => {
+describe('Check jQuery\'s `.append()` function', () => {
   before(setupIntegration);
 
   context('Append a string', () => {
