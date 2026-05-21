@@ -7580,10 +7580,10 @@ tinyglobby@^0.2.16:
     fdir "^6.5.0"
     picomatch "^4.0.4"
 
-tinymce@^8.0.1:
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-8.1.2.tgz#0598f3703a2977533196161f5bce5256d6872da0"
-  integrity sha512-KITxHEEHRlxC5xOnxA123eAJ67NgsWxNphtItWt9TRu07DiTZrWIqJeIKRX9euE51/l3kJO4WQiqoBXKTJJGsA==
+tinymce@^8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-8.5.1.tgz#2783ea3a666081b3e8ac38cb4d0cdab589782544"
+  integrity sha512-Wd4OrokDEwlXppSR+ijXngLa2+s3v8NZax9WCvAHeQhqvFsj9tGt19PmrnAdGLiQFkBBYzdOLW23tsBTPMiJYw==
 
 tinyrainbow@^1.2.0:
   version "1.2.0"
