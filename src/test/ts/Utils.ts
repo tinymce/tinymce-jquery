@@ -33,12 +33,12 @@ export const createHTML = async (html: string, action: (root: HTMLElement) => vo
   Insert.append(SugarBody.body(), ce);
 
   try {
-      const maybeAsync = action(ce.dom);
-      if (maybeAsync) {
-        await maybeAsync;
-      }
+    const maybeAsync = action(ce.dom);
+    if (maybeAsync) {
+      await maybeAsync;
+    }
   } finally {
-      Remove.remove(ce);
+    Remove.remove(ce);
   }
 };
 
