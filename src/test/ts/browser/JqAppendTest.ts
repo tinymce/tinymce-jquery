@@ -1,17 +1,12 @@
 
 import { Assertions } from '@ephox/agar';
-import { after, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { createEditor, createHTML, removeTinymce } from '../Utils';
 import { setupIntegration } from '../../../main/ts/Integration';
 
-setupIntegration();
-
-// TODO: Re-enable these tests once we have time to investigate the flakes
 describe('Check jQuery\'s `.append()` function', () => {
-  after(() => {
-    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
-    removeTinymce();
-  });
+  before(setupIntegration);
+  after(removeTinymce);
 
   context('Append a string', () => {
     it('check that appending to a div works', () => {

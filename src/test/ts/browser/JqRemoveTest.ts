@@ -1,18 +1,14 @@
 
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { after, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createHTML, removeTinymce } from '../Utils';
 
-setupIntegration();
-
 describe('Check jQuery\'s `.remove()` function', () => {
-  after(() => {
-    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
-    removeTinymce();
-  });
+  before(setupIntegration);
+  after(removeTinymce);
 
   context('calling on a node removes that node', () => {
     it('check works on a div', async () => {

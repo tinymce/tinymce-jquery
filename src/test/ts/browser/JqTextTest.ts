@@ -1,16 +1,13 @@
 
 import { Assertions } from '@ephox/agar';
-import { after, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, createHTML, removeTinymce } from '../Utils';
 
-setupIntegration();
-
 describe('Check jQuery\'s `.text()` function', () => {
-  after(() => {
-    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
-    removeTinymce();
-  });
+  before(setupIntegration);
+  after(removeTinymce);
+
 
   context('passing no arguments to get the text content', () => {
     it('gets the text content of a div', async () => {

@@ -6,14 +6,14 @@ import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 import { removeTinymce } from '../Utils';
 
-// Note that bedrock uses jQuery so we don't need to load it
-setupIntegration();
-
 describe('LoadTest', () => {
   let editorInstance: Editor;
 
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
+    // Note that bedrock uses jQuery so we don't need to load it
+    setupIntegration();
+
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Insert.append(SugarBody.body(), ce);
@@ -37,7 +37,6 @@ describe('LoadTest', () => {
   after(() => {
     $('*:tinymce').remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
-    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
     removeTinymce();
   });
 

@@ -6,7 +6,6 @@ import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 import { removeTinymce } from '../Utils';
 
-setupIntegration();
 
 describe('OriginalTest', () => {
   const setup = () => {
@@ -23,13 +22,13 @@ describe('OriginalTest', () => {
 
   before(async function () {
     this.timeout(5000); // Allow more time for loading TinyMCE
+    setupIntegration();
     setup();
 
     await $('#elm1,#elm2').tinymce({
       license_key: 'gpl',
       script_url: '/project/node_modules/tinymce/tinymce.js',
     });
-
     await Waiter.pTryUntil('Editors should be initialized', () => {
       const ed1 = getTinymce().get('elm1');
       const ed2 = getTinymce().get('elm2');
