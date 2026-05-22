@@ -7,7 +7,7 @@ import { createEditor, createHTML, removeTinymce } from '../Utils';
 describe('Check jQuery\'s `.prepend()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
-  
+
   context('Prepend a string', () => {
     it('check that prepending to a div works', () => {
       const div = document.createElement('div');

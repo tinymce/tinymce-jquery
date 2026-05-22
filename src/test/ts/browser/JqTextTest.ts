@@ -8,7 +8,6 @@ describe('Check jQuery\'s `.text()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
 
-
   context('passing no arguments to get the text content', () => {
     it('gets the text content of a div', async () => {
       await createHTML('<div><p>Hello</p><p>World</p></div>', (root) => {

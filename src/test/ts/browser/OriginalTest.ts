@@ -6,7 +6,6 @@ import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
 import { removeTinymce } from '../Utils';
 
-
 describe('OriginalTest', () => {
   const setup = () => {
     // make an SugarElement for jQuery to target

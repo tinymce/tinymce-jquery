@@ -8,7 +8,6 @@ describe('Check jQuery\'s `.val()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
 
-
   context('passing no arguments to get the value', () => {
     it('gets the value of a input', () => {
       const input = document.createElement('input');
