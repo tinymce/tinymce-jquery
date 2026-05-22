@@ -1,12 +1,17 @@
 
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createEditor } from '../Utils';
+import { createEditor, removeTinymce } from '../Utils';
 
 setupIntegration();
 
 describe('Check jQuery\'s `.val()` function', () => {
+  after(() => {
+    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
+    removeTinymce();
+  });
+
   context('passing no arguments to get the value', () => {
     it('gets the value of a input', () => {
       const input = document.createElement('input');

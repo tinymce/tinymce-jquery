@@ -4,6 +4,7 @@ import { Class, Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '
 import { setupIntegration } from '../../../main/ts/Integration';
 import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
+import { removeTinymce } from '../Utils';
 
 // Note that bedrock uses jQuery so we don't need to load it
 setupIntegration();
@@ -36,6 +37,8 @@ describe('LoadTest', () => {
   after(() => {
     $('*:tinymce').remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
+    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
+    removeTinymce();
   });
 
   it('can be retrieved from jQuery', () => {

@@ -4,6 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { Class, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
 import { getTinymce } from '../../../main/ts/TinyMCE';
 import { setupIntegration } from 'src/main/ts/Integration';
+import { removeTinymce } from '../Utils';
 
 setupIntegration();
 
@@ -39,6 +40,7 @@ describe('OriginalTest', () => {
   after(() => {
     (getTinymce().EditorManager as any).remove();
     Arr.map(SelectorFilter.all('div.test-editor'), Remove.remove);
+    removeTinymce();
   });
 
   it('Get editor instance', () => {

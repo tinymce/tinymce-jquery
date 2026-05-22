@@ -1,14 +1,20 @@
 
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, context, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createEditor, createHTML } from '../Utils';
+import { createEditor, createHTML, removeTinymce } from '../Utils';
 
 setupIntegration();
 
 describe('Check jQuery\'s `.empty()` function', () => {
+
+  after(() => {
+    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
+    removeTinymce();
+  });
+
   context('calling on a node with content removes that content', () => {
     it('check empty works on a div', () => {
       const div = document.createElement('div');

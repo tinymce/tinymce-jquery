@@ -9,8 +9,6 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
   Insert.append(SugarBody.body(), ce);
   const targetElm = $(ce.dom);
   const editors = await targetElm.tinymce({
-    license_key: 'gpl',
-    script_url: '/project/node_modules/tinymce/tinymce.js',
   });
 
   await Waiter.pTryUntil('Editor should be initialized', () => editors[0]?.initialized);
@@ -19,7 +17,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
   if (maybeAsync) {
     await maybeAsync;
   }
-  editors[0].remove();
+  editors[0]?.remove();
   await Waiter.pTryUntil('Editor should be removed', () => $(ce.dom).tinymce() === undefined);
   Remove.remove(ce);
 };
@@ -34,6 +32,10 @@ export const createHTML = async (html: string, action: (root: HTMLElement) => vo
   if (maybeAsync) {
     await maybeAsync;
   }
-
   Remove.remove(ce);
+};
+
+export const removeTinymce = () => {
+  const tinymceScriptTags = document.querySelectorAll('script[src*="tinymce"]');
+  tinymceScriptTags.forEach((script) => script.remove());
 };

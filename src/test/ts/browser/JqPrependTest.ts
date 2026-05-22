@@ -1,12 +1,17 @@
 
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createEditor, createHTML } from '../Utils';
+import { createEditor, createHTML, removeTinymce } from '../Utils';
 
 setupIntegration();
 
 describe('Check jQuery\'s `.prepend()` function', () => {
+  after(() => {
+    // Remove any tinymce script tags that were added to the document during testing to prevent them interfering with other tests
+    removeTinymce();
+  });
+
   context('Prepend a string', () => {
     it('check that prepending to a div works', () => {
       const div = document.createElement('div');
