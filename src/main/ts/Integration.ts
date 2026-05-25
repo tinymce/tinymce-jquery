@@ -144,9 +144,14 @@ const tinymceFn = function (this: JQuery<HTMLElement>, settings?: RawEditorExten
 
 export const setupIntegration = () => {
   const jq = getJquery();
+
   // Add :tinymce pseudo selector this will select elements that has been converted into editor instances
   // it's now possible to use things like $('*:tinymce') to get all TinyMCE bound elements.
-  jq.expr.pseudos.tinymce = (e: Element) => !!getTinymceInstance(e);
+  // Take advantage of jQuery's createPseudo API in v4 while still supports the older versions
+  jq.expr.pseudos.tinymce = jq.expr.createPseudo ?
+    jq.expr.createPseudo(( _text ) => ( elem ) => !!getTinymceInstance( elem ))
+    : (e: Element) => !!getTinymceInstance(e);
+
   // Add a tinymce function for creating editors
   (jq.fn as any).tinymce = tinymceFn;
 };

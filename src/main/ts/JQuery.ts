@@ -1,6 +1,6 @@
 import { Global } from './Global';
 
-const jquery = (): (typeof import('jquery')) | null => (Global && Global.jQuery) ?? null;
+const jquery = (): JQueryStatic | null => (Global && Global.jQuery) ?? null;
 
 export const getJquery = () => {
   const jq = jquery();

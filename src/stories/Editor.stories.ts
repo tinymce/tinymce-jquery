@@ -367,16 +367,11 @@ https://play.spotify.com/album/4cBfyeNYbJAmOq0sl3Hijd
 </div>`.trim();
 
 
-// More on default export: https://storybook.js.org/docs/html/writing-stories/introduction#default-export
 export default {
-  title: 'TinyMCE Editor',
-  // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
-  argTypes: {
-  },
+  title: 'TinyMCE Editor'
 } as Meta;
 
 let count = 0;
-// More on component templates: https://storybook.js.org/docs/html/writing-stories/introduction#using-args
 const Template: Story<RawEditorExtendedSettings> = (args) => {
   const mount = `${count++}`;
   const mountNode = document.createElement('div');
@@ -418,10 +413,8 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
 const fullEditorConfig = generateConfig({
   excludePlugins: ['tinydrive', 'uploadcare']
 });
-export const IframeEditor = Template.bind({
-  
-});
-// More on args: https://storybook.js.org/docs/html/writing-stories/args
+
+export const IframeEditor = Template.bind({});
 IframeEditor.args = {
   inline: false,
   ...fullEditorConfig

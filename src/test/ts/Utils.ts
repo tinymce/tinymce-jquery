@@ -1,4 +1,5 @@
 
+import { Waiter } from '@ephox/agar';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 
@@ -6,16 +7,21 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
   // TinyMCE must be in the document to work
   const ce = SugarElement.fromTag('textarea');
   Insert.append(SugarBody.body(), ce);
+
   try {
     const targetElm = $(ce.dom);
-    const editors = await targetElm.tinymce({ });
+    const editors = await targetElm.tinymce({
+      license_key: 'gpl',
+      base_url: '/project/node_modules/tinymce',
+    });
+    await Waiter.pTryUntil('Editor should be initialized', () => editors[0]?.initialized);
     try {
       const maybeAsync = action(targetElm, editors[0]);
       if (maybeAsync) {
         await maybeAsync;
       }
     } finally {
-      editors[0].remove();
+      editors[0]?.remove();
     }
   } finally {
     Remove.remove(ce);
@@ -25,6 +31,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
 export const createHTML = async (html: string, action: (root: HTMLElement) => void | Promise<void>) => {
   const ce = SugarElement.fromHtml<HTMLElement>(html);
   Insert.append(SugarBody.body(), ce);
+
   try {
     const maybeAsync = action(ce.dom);
     if (maybeAsync) {
@@ -33,4 +40,9 @@ export const createHTML = async (html: string, action: (root: HTMLElement) => vo
   } finally {
     Remove.remove(ce);
   }
+};
+
+export const removeTinymce = () => {
+  const tinymceScriptTags = document.querySelectorAll('script[src*="tinymce"]');
+  tinymceScriptTags.forEach((script) => script.remove());
 };

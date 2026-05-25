@@ -22,6 +22,25 @@ export default defineConfig([
     },
     rules: {}
   },
+    {
+    files: [
+      ".storybook/*.ts",
+      "src/stories/**/*.ts"
+    ],
+    plugins: {
+        "@tinymce": tinymceEslintPlugin
+    },
+    extends: [ '@tinymce/standard' ],
+    languageOptions: {
+      parserOptions: {
+        sourceType: "module",
+        project: [
+            ".storybook/tsconfig.json"
+        ]
+      },
+    },
+    rules: {}
+  },
   {
     files: [
       "rollup.config.js",
