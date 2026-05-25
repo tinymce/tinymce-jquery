@@ -1,19 +1,14 @@
 import { setupIntegration, RawEditorExtendedSettings } from '../main/ts/Integration';
-import { Story, Meta } from '@storybook/html';
+import { StoryFn, Meta } from '@storybook/html';
 
 setupIntegration();
 
-// More on default export: https://storybook.js.org/docs/html/writing-stories/introduction#default-export
 export default {
-  title: 'TinyMCE Editor',
-  // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
-  argTypes: {
-  },
+  title: 'TinyMCE Editor'
 } as Meta;
 
 let count = 0;
-// More on component templates: https://storybook.js.org/docs/html/writing-stories/introduction#using-args
-const Template: Story<RawEditorExtendedSettings> = (args) => {
+const Template: StoryFn<RawEditorExtendedSettings> = (args) => {
   const mount = `${count++}`;
 
   const mountNode = document.createElement('div');
@@ -54,7 +49,6 @@ const Template: Story<RawEditorExtendedSettings> = (args) => {
 };
 
 export const IframeEditor = Template.bind({});
-// More on args: https://storybook.js.org/docs/html/writing-stories/args
 IframeEditor.args = {
   inline: false,
 };

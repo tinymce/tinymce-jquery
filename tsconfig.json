@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,16 +16,14 @@
     "target": "es5",
     "module": "es2015",
     "lib": ["es2015", "dom"],
-    "types": [],
     "declaration": false,
     "sourceMap": false,
     "outDir": "lib",
-    "baseUrl": ".",
     "rootDir": "src",
+    "types": ["jquery"]
   },
   "include": [
     "src/main/ts",
-    "src/test/ts",
-    "src/stories"
+    "src/test/ts"
   ]
 }

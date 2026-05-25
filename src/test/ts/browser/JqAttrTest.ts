@@ -1,12 +1,13 @@
 
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createEditor } from '../Utils';
-
-setupIntegration();
+import { createEditor, removeTinymce } from '../Utils';
 
 describe('Check jQuery\'s `.attr()` function', () => {
+  before(setupIntegration);
+  after(removeTinymce);
+
   context('passing a single string gets the associated attribute value or `undefined` when the attribute is not set', () => {
     it('Check that the attribute `"width"` returns undefined when it does not exist', () => {
       const el = document.createElement('div');

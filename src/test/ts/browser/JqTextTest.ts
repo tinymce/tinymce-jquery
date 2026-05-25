@@ -1,12 +1,13 @@
 
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createEditor, createHTML } from '../Utils';
-
-setupIntegration();
+import { createEditor, createHTML, removeTinymce } from '../Utils';
 
 describe('Check jQuery\'s `.text()` function', () => {
+  before(setupIntegration);
+  after(removeTinymce);
+
   context('passing no arguments to get the text content', () => {
     it('gets the text content of a div', async () => {
       await createHTML('<div><p>Hello</p><p>World</p></div>', (root) => {

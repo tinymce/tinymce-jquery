@@ -1,14 +1,15 @@
 
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 import { setupIntegration } from '../../../main/ts/Integration';
-import { createHTML } from '../Utils';
-
-setupIntegration();
+import { createHTML, removeTinymce } from '../Utils';
 
 describe('Check jQuery\'s `.remove()` function', () => {
+  before(setupIntegration);
+  after(removeTinymce);
+
   context('calling on a node removes that node', () => {
     it('check works on a div', async () => {
       await createHTML(`<section><div id="target"><p>Content</p></div></section>`, (root) => {
