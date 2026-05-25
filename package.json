@@ -35,7 +35,6 @@
     "@ephox/sand": "^6.0.9",
     "@ephox/sugar": "^9.2.1",
     "@ephox/swag": "^4.6.0",
-    "@microsoft/fetch-event-source": "^2.0.1",
     "@rollup/plugin-terser": "^0.4.0",
     "@storybook/addon-docs": "^10.0.0",
     "@storybook/addon-links": "^10.0.0",
