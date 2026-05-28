@@ -14,7 +14,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
       license_key: 'gpl',
       base_url: '/project/node_modules/tinymce',
     });
-    await Waiter.pTryUntil('Editor should be initialized', () => editors[0]?.initialized);
+    await Waiter.pTryUntilPredicate('Editor should be initialized', () => editors[0]?.initialized);
     try {
       const maybeAsync = action(targetElm, editors[0]);
       if (maybeAsync) {
