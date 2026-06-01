@@ -96,7 +96,10 @@ describe('OriginalTest', () => {
   });
 
   it('applyPatch is only called once', () => {
-    const options = {};
+    const options = {
+      license_key: 'gpl',
+      script_url: '/project/node_modules/tinymce/tinymce.js',
+    };
 
     $('#elm1').tinymce(options).catch((err) => {
       /* eslint-disable-next-line no-console */

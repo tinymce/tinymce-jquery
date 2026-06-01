@@ -17,7 +17,6 @@ describe('LoadTest', () => {
     const ce = SugarElement.fromTag('div');
     Class.add(ce, 'test-editor');
     Insert.append(SugarBody.body(), ce);
-
     await new Promise<void>((resolve) => {
       $('div.test-editor').tinymce({
         license_key: 'gpl',
