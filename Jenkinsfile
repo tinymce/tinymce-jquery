@@ -12,7 +12,7 @@ mixedBeehiveFlow(
   ],
   testPrefix: 'Tiny-jQuery',
   platforms: [
-    [ browser: 'chrome', headless: true ],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
     [ browser: 'firefox', provider: 'aws', buckets: 1 ],
     [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
   ],
