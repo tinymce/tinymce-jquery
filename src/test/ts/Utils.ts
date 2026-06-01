@@ -1,5 +1,3 @@
-
-import { Waiter } from '@ephox/agar';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 
