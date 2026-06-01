@@ -1,3 +1,5 @@
+
+import { Waiter } from '@ephox/agar';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { Editor } from 'tinymce';
 
@@ -12,6 +14,8 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
       license_key: 'gpl',
       script_url: '/project/node_modules/tinymce/tinymce.js',
     });
+
+    await Waiter.pTryUntilPredicate('Editor should be initialized', () => editors[0]?.initialized === true);
 
     try {
       const maybeAsync = action(targetElm, editors[0]);

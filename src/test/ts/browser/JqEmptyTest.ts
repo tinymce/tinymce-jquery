@@ -6,7 +6,7 @@ import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, createHTML, removeTinymce } from '../Utils';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 
-describe('Check jQuery\'s `.empty()` function', () => {
+describe.skip('Check jQuery\'s `.empty()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
 

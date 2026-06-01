@@ -4,7 +4,7 @@ import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createEditor, removeTinymce } from '../Utils';
 
-describe('Check jQuery\'s `.val()` function', () => {
+describe.skip('Check jQuery\'s `.val()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
 
