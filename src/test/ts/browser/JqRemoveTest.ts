@@ -6,7 +6,7 @@ import { Editor } from 'tinymce';
 import { setupIntegration } from '../../../main/ts/Integration';
 import { createHTML, removeTinymce } from '../Utils';
 
-describe.skip('Check jQuery\'s `.remove()` function', () => {
+describe('Check jQuery\'s `.remove()` function', () => {
   before(setupIntegration);
   after(removeTinymce);
 

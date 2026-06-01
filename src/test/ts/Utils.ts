@@ -23,7 +23,7 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
         await maybeAsync;
       }
     } finally {
-      editors[0].remove();
+      editors[0]?.remove();
     }
   } finally {
     Remove.remove(ce);

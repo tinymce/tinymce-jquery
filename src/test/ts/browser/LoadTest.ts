@@ -6,7 +6,7 @@ import { Arr } from '@ephox/katamari';
 import { Editor } from 'tinymce';
 import { removeTinymce } from '../Utils';
 
-describe.skip('LoadTest', () => {
+describe('LoadTest', () => {
   let editorInstance: Editor;
 
   before(async function () {
