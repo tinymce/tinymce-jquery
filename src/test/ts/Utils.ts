@@ -15,15 +15,13 @@ export const createEditor = async (action: (targetElm: JQuery<HTMLElement>, edit
       script_url: '/project/node_modules/tinymce/tinymce.js',
     });
 
-    await Waiter.pTryUntilPredicate('Editor should be initialized', () => editors[0]?.initialized === true);
-
     try {
       const maybeAsync = action(targetElm, editors[0]);
       if (maybeAsync) {
         await maybeAsync;
       }
     } finally {
-      editors[0]?.remove();
+      editors[0].remove();
     }
   } finally {
     Remove.remove(ce);
