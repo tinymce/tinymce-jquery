@@ -1,7 +1,16 @@
 {
   "name": "@tinymce/tinymce-jquery",
   "version": "2.3.0-rc",
-  "description": "Official TinyMCE integration for jQuery",
+  "description": "Official jQuery integrationn for TinyMCE rich text editor.",
+  "keywords": [
+    "tinymce",
+    "jquery",
+    "editor",
+    "wysiwyg",
+    "rich-text-editor",
+    "html",
+    "javascript"
+  ],
   "main": "dist/tinymce-jquery.js",
   "files": [
     "dist",
@@ -24,7 +33,7 @@
     "deploy-storybook": "yarn storybook-to-ghpages --source-branch=main"
   },
   "repository": "https://github.com/tinymce/tinymce-jquery",
-  "author": "Tiny Technologies",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc.",
   "license": "MIT",
   "devDependencies": {
     "@ephox/agar": "^7.4.1",
