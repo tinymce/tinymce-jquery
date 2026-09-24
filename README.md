@@ -2,7 +2,7 @@
 
 ## About
 
-`tinymce-jquery` is a thin wrapper around [TinyMCE](https://github.com/tinymce/tinymce) to make integration easy and seamless. It automatically pulls `tinymce` from Tiny Cloud CDN unless configured to use a different setup, such as self-hosting the [tinymce NPM package](https://www.npmjs.com/package/tinymce).
+Official jQuery integration for TinyMCE, the rich text editor. It adds a custom `.tinymce()` function to jQuery so an editor can be initialized by invoking `$(<selector>).tinymce()`. By default, it pulls TinyMCE from the Tiny Cloud CDN unless configured to use a different setup, such as self-hosting the [tinymce NPM package](https://www.npmjs.com/package/tinymce).
 
 ## Quickstart
 
