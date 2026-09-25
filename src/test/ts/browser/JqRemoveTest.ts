@@ -36,7 +36,10 @@ describe('Check jQuery\'s `.remove()` function', () => {
       await createHTML(`<section><div id="target"><p>Before</p><textarea id="editor">&lt;p&gt;Content&lt;/p&gt;</textarea></div></section>`, async (root) => {
         const target = $('div#target');
         const elm = $('textarea#editor');
-        const ed = (await elm.tinymce({ }))[0];
+        const ed = (await elm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to contain content', `<p>Content</p>`, ed.getContent());
           target.remove();
@@ -51,7 +54,11 @@ describe('Check jQuery\'s `.remove()` function', () => {
       await createHTML(`<section><div id="target"><p>Before</p><div id="editor"><p>Content</p></div></div></section>`, async (root) => {
         const target = $('div#target');
         const elm = $('div#editor');
-        const ed = (await elm.tinymce({ inline: true }))[0];
+        const ed = (await elm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+          inline: true
+        }))[0];
         try {
           Assertions.assertStructure('Expected root to initially contain everything',
             ApproxStructure.fromHtml(`<section><div id="target"><p>Before</p><div id="editor"><p>Content</p></div></div></section>`),
@@ -74,9 +81,18 @@ describe('Check jQuery\'s `.remove()` function', () => {
         const target = $('div.target');
         const eds: Editor[] = [];
         try {
-          eds.push((await $('textarea#editor1').tinymce({ }))[0]);
-          eds.push((await $('textarea#editor2').tinymce({ }))[0]);
-          eds.push((await $('textarea#editor3').tinymce({ }))[0]);
+          eds.push((await $('textarea#editor1').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
+          eds.push((await $('textarea#editor2').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
+          eds.push((await $('textarea#editor3').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
           Assertions.assertEq('Expected editor 1 to contain content', `<p>Content</p>`, eds[0].getContent());
           Assertions.assertEq('Expected editor 2 to contain content', `<p>Content</p>`, eds[1].getContent());
           Assertions.assertEq('Expected editor 3 to contain content', `<p>Content</p>`, eds[2].getContent());
@@ -102,9 +118,21 @@ describe('Check jQuery\'s `.remove()` function', () => {
         const target = $('div.target');
         const eds: Editor[] = [];
         try {
-          eds.push((await $('div#editor1').tinymce({ inline: true }))[0]);
-          eds.push((await $('div#editor2').tinymce({ inline: true }))[0]);
-          eds.push((await $('div#editor3').tinymce({ inline: true }))[0]);
+          eds.push((await $('div#editor1').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true
+          }))[0]);
+          eds.push((await $('div#editor2').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true
+          }))[0]);
+          eds.push((await $('div#editor3').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true
+          }))[0]);
           Assertions.assertStructure('Expected root to initially contain everything',
             ApproxStructure.fromHtml('<section>' +
             '<div class="target"><div id="editor1"><p>Content</p></div></div>' +
@@ -135,7 +163,10 @@ describe('Check jQuery\'s `.remove()` function', () => {
     it('check works without selector on normal editors', async () => {
       await createHTML(`<section><textarea id="editor">&lt;p&gt;Content&lt;/p&gt;</textarea></section>`, async (root) => {
         const elm = $('textarea#editor');
-        const ed = (await elm.tinymce({ }))[0];
+        const ed = (await elm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js'
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to contain content', `<p>Content</p>`, ed.getContent());
           elm.remove();
@@ -149,7 +180,11 @@ describe('Check jQuery\'s `.remove()` function', () => {
     it('check works without selector on inline editors', async () => {
       await createHTML(`<section><div id="editor"><p>Content</p></div></section>`, async (root) => {
         const elm = $('div#editor');
-        const ed = (await elm.tinymce({ }))[0];
+        const ed = (await elm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+          inline: true
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to contain content', `<p>Content</p>`, ed.getContent());
           elm.remove();
@@ -169,9 +204,18 @@ describe('Check jQuery\'s `.remove()` function', () => {
         const target = $('section.container textarea');
         const eds: Editor[] = [];
         try {
-          eds.push((await $('textarea#editor1').tinymce({ }))[0]);
-          eds.push((await $('textarea#editor2').tinymce({ }))[0]);
-          eds.push((await $('textarea#editor3').tinymce({ }))[0]);
+          eds.push((await $('textarea#editor1').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
+          eds.push((await $('textarea#editor2').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
+          eds.push((await $('textarea#editor3').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js'
+          }))[0]);
           Assertions.assertEq('Expected editor 1 to contain content', `<p>Content</p>`, eds[0].getContent());
           Assertions.assertEq('Expected editor 2 to contain content', `<p>Content</p>`, eds[1].getContent());
           Assertions.assertEq('Expected editor 3 to contain content', `<p>Content</p>`, eds[2].getContent());
@@ -197,9 +241,28 @@ describe('Check jQuery\'s `.remove()` function', () => {
         const target = $('section.container div');
         const eds: Editor[] = [];
         try {
-          eds.push((await $('div#editor1').tinymce({ inline: true }))[0]);
-          eds.push((await $('div#editor2').tinymce({ inline: true }))[0]);
-          eds.push((await $('div#editor3').tinymce({ inline: true }))[0]);
+          eds.push((await $('div#editor1').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true }))[0]);
+          eds.push((await $('div#editor2').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true }))[0]);
+          eds.push((await $('div#editor3').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true }))[0]);
+          eds.push((await $('div#editor2').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true
+          }))[0]);
+          eds.push((await $('div#editor3').tinymce({
+            license_key: 'gpl',
+            script_url: '/project/node_modules/tinymce/tinymce.js',
+            inline: true
+          }))[0]);
           Assertions.assertStructure('Expected root to initially contain everything',
             ApproxStructure.fromHtml('<section class="container">' +
             '<div id="editor1"><p>Content</p></div>' +

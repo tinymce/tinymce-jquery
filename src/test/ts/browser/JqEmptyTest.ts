@@ -36,7 +36,11 @@ describe('Check jQuery\'s `.empty()` function', () => {
     it('check empty works on a inline editor with content', async () => {
       await createHTML(`<section><div id="editor"><p>Hello</p><p>World</p></div></section>`, async (root) => {
         const elm = $('div#editor');
-        const ed = (await elm.tinymce({ inline: true }))[0];
+        const ed = (await elm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+          inline: true
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to have content', `<p>Hello</p>\n<p>World</p>`, ed.getContent());
           elm.empty();
@@ -56,7 +60,10 @@ describe('Check jQuery\'s `.empty()` function', () => {
       // eslint-disable-next-line max-len
       await createHTML(`<section><div id="container"><p>Before</p><div><textarea id="editor">&lt;p&gt;Hello&lt;/p&gt;&lt;p&gt;World&lt;/p&gt;</textarea></div><p>After</p></div><p>Extra</p></section>`, async (root) => {
         const edElm = $('textarea#editor');
-        const ed = (await edElm.tinymce({ }))[0];
+        const ed = (await edElm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to have content', `<p>Hello</p>\n<p>World</p>`, ed.getContent());
           const container = $('div#container');
@@ -73,7 +80,11 @@ describe('Check jQuery\'s `.empty()` function', () => {
       // eslint-disable-next-line max-len
       await createHTML(`<section><div id="container"><p>Before</p><div><div id="editor"><p>Hello</p><p>World</p></div></div><p>After</p></div><p>Extra</p></section>`, async (root) => {
         const edElm = $('div#editor');
-        const ed = (await edElm.tinymce({ inline: true }))[0];
+        const ed = (await edElm.tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+          inline: true
+        }))[0];
         try {
           Assertions.assertEq('Expected editor to have content', `<p>Hello</p>\n<p>World</p>`, ed.getContent());
           const container = $('div#container');
@@ -113,8 +124,15 @@ describe('Check jQuery\'s `.empty()` function', () => {
           const normal = $('textarea.editor');
           const eds: Editor[] = [];
           try {
-            eds.push(...await inline.tinymce({ inline: true }));
-            eds.push(...await normal.tinymce({ }));
+            eds.push(...await inline.tinymce({
+              license_key: 'gpl',
+              script_url: '/project/node_modules/tinymce/tinymce.js',
+              inline: true
+            }));
+            eds.push(...await normal.tinymce({
+              license_key: 'gpl',
+              script_url: '/project/node_modules/tinymce/tinymce.js'
+            }));
             for (let i = 0; i < eds.length; i++) {
               Assertions.assertEq(`Expected editor ${i} to have content`, `<p>Content1</p>\n<p>Content2</p>`, eds[i].getContent());
             }
@@ -139,7 +157,10 @@ describe('Check jQuery\'s `.empty()` function', () => {
     it('check normal editors before and after are left alone', async () => {
       // eslint-disable-next-line max-len
       await createHTML(`<section><textarea class="editor">&lt;p&gt;Editor Content&lt;/p&gt;</textarea><div id="container"><p>Container Content</p></div><textarea class="editor">&lt;p&gt;Editor Content&lt;/p&gt;</textarea></section>`, async () => {
-        const eds = await $('textarea.editor').tinymce({ });
+        const eds = await $('textarea.editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        });
         try {
           for (let i = 0; i < eds.length; i++) {
             Assertions.assertEq(`Expected editor ${i} to have content`, `<p>Editor Content</p>`, eds[i].getContent());
@@ -162,7 +183,11 @@ describe('Check jQuery\'s `.empty()` function', () => {
     it('check inline editors before and after are left alone', async () => {
       // eslint-disable-next-line max-len
       await createHTML(`<section><div class="editor"><p>Editor Content</p></div><div id="container"><p>Container Content</p></div><div class="editor"><p>Editor Content</p></div></section>`, async () => {
-        const eds = await $('div.editor').tinymce({ inline: true });
+        const eds = await $('div.editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+          inline: true
+        });
         try {
           for (let i = 0; i < eds.length; i++) {
             Assertions.assertEq(`Expected editor ${i} to have content`, `<p>Editor Content</p>`, eds[i].getContent());

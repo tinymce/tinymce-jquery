@@ -30,7 +30,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('gets the text of TinyMCE and two divs', async () => {
       await createHTML(`<section><div><p>Before</p></div><div id="editor"><p>Middle</p></div><div><p>After</p></div></section>`, async (root) => {
         const divs = $(root).find('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        }))[0];
         try {
           Assertions.assertEq('Expected matching text', 'BeforeMiddleAfter', divs.text());
         } finally {
@@ -54,7 +57,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Before</div><div id="editor"></div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        }))[0];
         try {
           $(divs).text('Hello');
           Assertions.assertEq('Expected matching html', 'Hello', divs[0].innerHTML);
@@ -80,7 +86,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Before</div><div id="editor"></div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js',
+        }))[0];
         try {
           $(divs).text(9007199254740991);
           Assertions.assertEq('Expected matching html', '9007199254740991', divs[0].innerHTML);
@@ -106,7 +115,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Before</div><div id="editor"></div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js'
+        }))[0];
         try {
           $(divs).text(true);
           Assertions.assertEq('Expected matching html', 'true', divs[0].innerHTML);
@@ -144,7 +156,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Content</div><div id="editor">Content</div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js'
+        }))[0];
         try {
           $(divs).text(function (index, prevValue) {
             Assertions.assertEq('Expected matching this', divs[index], this);
@@ -186,7 +201,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Content</div><div id="editor">Content</div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js'
+        }))[0];
         try {
           $(divs).text(function (index, prevValue) {
             Assertions.assertEq('Expected matching this', divs[index], this);
@@ -229,7 +247,10 @@ describe('Check jQuery\'s `.text()` function', () => {
     it('sets the content of multiple things simultaneously', async () => {
       await createHTML(`<section><div>Content</div><div id="editor">Content</div></section>`, async (root) => {
         const divs = root.querySelectorAll('div');
-        const ed = (await $('#editor').tinymce({ }))[0];
+        const ed = (await $('#editor').tinymce({
+          license_key: 'gpl',
+          script_url: '/project/node_modules/tinymce/tinymce.js'
+        }))[0];
         try {
           $(divs).text(function (index, prevValue) {
             Assertions.assertEq('Expected matching this', divs[index], this);
