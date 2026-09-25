@@ -1,7 +1,7 @@
 {
   "name": "@tinymce/tinymce-jquery",
   "version": "2.3.0-rc",
-  "description": "Official jQuery integrationn for TinyMCE rich text editor.",
+  "description": "Official jQuery integration for TinyMCE rich text editor.",
   "keywords": [
     "tinymce",
     "jquery",
