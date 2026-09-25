@@ -8,38 +8,35 @@ Official jQuery integration for TinyMCE, the rich text editor. It adds a custom 
 
 ### Cloud CDN
 
-In your project:
-
 1. [Sign up for a Tiny Cloud account](https://www.tiny.cloud/pricing/) to receive a Tiny Cloud API key.
-2. Include the following script tags to load jQuery, TinyMCE, and the jQuery integration:
+1. Then in your project:
+    1. Include the following script tags to load jQuery, TinyMCE, and the jQuery integration:
 
-```html
-<script
-  src="https://code.jquery.com/jquery-4.0.0.min.js"
-  integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdn.tiny.cloud/1/your-api-key/tinymce/8/tinymce.min.js"
-  referrerpolicy="origin"
-></script>
-<script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js"></script>
-```
+        ```html
+        <script
+          src="https://code.jquery.com/jquery-4.0.0.min.js"
+          integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+          crossorigin="anonymous"
+        ></script>
+        <script
+          src="https://cdn.tiny.cloud/1/your-api-key/tinymce/8/tinymce.min.js"
+          referrerpolicy="origin"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js"></script>
+        ```
+    1. Add a `textarea` to target and initialize the editor:
 
-3. Add a `textarea` to target and initialize the editor:
+        ```html
+        <textarea id="tiny"><p>Welcome to TinyMCE jQuery!</p></textarea>
 
-```html
-<textarea id="tiny"><p>Welcome to TinyMCE jQuery!</p></textarea>
-
-<script>
-  $('textarea#tiny').tinymce({
-    api_key: 'your-api-key',
-    plugins: 'lists link image table code help wordcount'
-  });
-</script>
-```
-
-4. Update the `your-api-key` placeholders to include your Tiny Cloud API key.
+        <script>
+          $('textarea#tiny').tinymce({
+            api_key: 'your-api-key',
+            plugins: 'lists link image table code help wordcount'
+          });
+        </script>
+        ```
+    1. Update the `your-api-key` placeholders to include your Tiny Cloud API key.
 
 For more information: [Using TinyMCE with jQuery - Cloud CDN](https://www.tiny.cloud/docs/tinymce/latest/jquery-cloud/)
 
